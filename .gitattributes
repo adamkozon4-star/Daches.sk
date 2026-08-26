@@ -1,0 +1,14 @@
+# Konce riadkov rovnaké na každom počítači — v repozitári vždy LF.
+# Bez tohto hlási Git na Windowse varovania a diffy môžu obsahovať
+# celé súbory len kvôli zmene CRLF/LF.
+* text=auto eol=lf
+
+# Binárne súbory sa nesmú prepisovať.
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.webp binary
+*.avif binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
