@@ -1,0 +1,690 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DACHES s.r.o. — DESIGN SYSTEM
+   Dokumentácia: DESIGN_SYSTEM.md
+   ============================================================ */
+
+/* ---------- 1. PRIMITÍVA (jediné miesto s hex hodnotami) ---------- */
+:root {
+  --p-dark: #111111;
+  --p-dark-2: #181818;
+  --p-light: #f7f7f5;
+  --p-white: #ffffff;
+  --p-muted: #a6a6a0;
+  --p-accent: #dfff4f;
+  --p-accent-hover: #d3f52e;
+  --p-line: rgba(17, 17, 17, 0.08);
+  --p-line-dark: rgba(255, 255, 255, 0.09);
+}
+
+/* ---------- 2. SÉMANTICKÉ TOKENY → Tailwind utility ---------- */
+@theme inline {
+  /* Defaultná paleta vypnutá — platné sú len tokeny nižšie */
+  --color-*: initial;
+
+  --color-dark: var(--p-dark);
+  --color-dark-2: var(--p-dark-2);
+  --color-light: var(--p-light);
+  --color-white: var(--p-white);
+  --color-muted: var(--p-muted);
+  --color-accent: var(--p-accent);
+  --color-accent-hover: var(--p-accent-hover);
+  --color-line: var(--p-line);
+  --color-line-dark: var(--p-line-dark);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-inherit: inherit;
+
+  /* Typografia */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --text-hero: clamp(2.375rem, 5.6vw, 5.25rem);
+  --text-hero--line-height: 1.02;
+  --text-hero--letter-spacing: -0.025em;
+  --text-hero--font-weight: 800;
+
+  --text-h2: clamp(1.875rem, 3.6vw, 3.25rem);
+  --text-h2--line-height: 1.08;
+  --text-h2--letter-spacing: -0.02em;
+  --text-h2--font-weight: 800;
+
+  --text-h3: clamp(1.0625rem, 1.4vw, 1.25rem);
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h3--font-weight: 700;
+
+  --text-lead: clamp(1rem, 1.3vw, 1.1875rem);
+  --text-lead--line-height: 1.6;
+
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.14em;
+  --text-eyebrow--font-weight: 700;
+
+  /* Tvar — dve hodnoty, nič medzi tým */
+  --radius-*: initial;
+  --radius-none: 0px;
+  --radius-card: 12px;
+  --radius-panel: 20px;
+  --radius-full: 9999px;
+
+  /* Tiene — jeden pokojný, jeden zdvihnutý */
+  --shadow-card: 0 1px 2px rgba(17, 17, 17, 0.04),
+    0 8px 24px rgba(17, 17, 17, 0.06);
+  --shadow-lift: 0 2px 4px rgba(17, 17, 17, 0.05),
+    0 18px 44px rgba(17, 17, 17, 0.1);
+  --shadow-panel: 0 24px 64px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- 3. MOTION TOKENY ---------- */
+:root {
+  --d-micro: 160ms;
+  --d-short: 280ms;
+  --d-base: 520ms;
+  --d-long: 900ms;
+
+  --e-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --stag: 80ms;
+
+  /* Výška hlavičky — pre scroll-margin kotiev */
+  --header-h: 76px;
+}
+
+/* ---------- 4. ZÁKLAD ---------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--p-white);
+  color: var(--p-dark);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+}
+
+/* Kotvy sa nesmú schovať pod hlavičku */
+section[id] {
+  scroll-margin-top: calc(var(--header-h) + 20px);
+}
+
+::selection {
+  background: var(--p-accent);
+  color: var(--p-dark);
+}
+
+:focus-visible {
+  outline: 2px solid var(--p-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Číslice v jednotnej šírke — cenníky, kroky, telefón */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 5. LAYOUT UTILITY ---------- */
+.container-max {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-max {
+    padding-inline: 2rem;
+  }
+}
+
+/* Jednotný vertikálny rytmus — 56 / 80 / 120 */
+.section-y {
+  padding-block: 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .section-y {
+    padding-block: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-y {
+    padding-block: 7.5rem;
+  }
+}
+
+/* ============================================================
+   6. MOTION SYSTÉM
+   Animuje sa výhradne opacity, transform a clip-path.
+   ============================================================ */
+
+/* ---------- 6.1 Scroll reveal ----------
+
+   Počiatočný (skrytý) stav je zámerne podmienený triedou `.js-motion`, ktorú
+   nastavuje inline skript v <head> a odoberá failsafe, ak sa motion nespustí.
+
+   Dôvod: keby bol `opacity: 0` bezpodmienečný, akákoľvek chyba JavaScriptu by
+   nechala celý web neviditeľný. Takto je obsah viditeľný vždy a skrýva sa až
+   vtedy, keď je isté, že ho má kto odhaliť.
+*/
+.js-motion [data-reveal] {
+  opacity: 0;
+}
+
+.js-motion [data-reveal="up"],
+.js-motion [data-reveal=""] {
+  transform: translate3d(0, 18px, 0);
+}
+
+.js-motion [data-reveal="left"] {
+  transform: translate3d(-24px, 0, 0);
+}
+
+.js-motion [data-reveal="right"] {
+  transform: translate3d(24px, 0, 0);
+}
+
+.js-motion [data-reveal="scale"] {
+  transform: scale(0.96);
+}
+
+/* Odkrytie zdola nahor — ako keď sa kladie krytina.
+
+   ⚠️ Clip je zámerne na OBSAHU prvku, nie na prvku samotnom.
+
+   IntersectionObserver počíta prienik až po aplikovaní orezania. Keby mal
+   `clip-path: inset(0 0 100% 0)` priamo pozorovaný prvok, observer by videl
+   nulovú plochu, nikdy by nenahlásil viditeľnosť a orezanie by sa neodstránilo.
+   Prvok by sa doslova skryl pred vlastným observerom a fotky by nikdy
+   nenabehli. Toto sa nesmie zlúčiť späť do jedného selektora.
+*/
+.js-motion [data-reveal="mask"] {
+  opacity: 1;
+}
+
+.js-motion [data-reveal="mask"] > * {
+  clip-path: inset(0 0 100% 0);
+}
+
+.js-motion [data-reveal="mask"] img,
+.js-motion [data-reveal="mask"] .zoom-in {
+  transform: scale(1.06);
+}
+
+[data-reveal] {
+  transition:
+    opacity var(--d-base) var(--e-out),
+    transform var(--d-base) var(--e-out),
+    clip-path var(--d-long) var(--e-out);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+/*
+  Jedno pravidlo pre obe vlastnosti zámerne.
+
+  V `Featured` je priamym dieťaťom masky samotný <img> — dva samostatné
+  `transition` zápisy by sa navzájom prepísali (`[data-reveal="mask"] img` má
+  vyššiu špecificitu než `> *`) a odkrytie by skočilo namiesto animácie.
+*/
+[data-reveal="mask"] > *,
+[data-reveal="mask"] img,
+[data-reveal="mask"] .zoom-in {
+  transition:
+    clip-path var(--d-long) var(--e-out),
+    transform var(--d-long) var(--e-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/*
+  Odhalený stav musí mať vyššiu špecificitu než gatovaný skrytý stav
+  (`.js-motion [data-reveal]`), inak by ho neprebil a obsah by zostal skrytý
+  aj po odhalení. Preto je zámerne písaný cez `.js-motion` s dvoma atribútmi.
+*/
+.js-motion [data-reveal][data-revealed] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+.js-motion [data-reveal="mask"][data-revealed] > * {
+  clip-path: inset(0 0 0 0);
+}
+
+.js-motion [data-reveal="mask"][data-revealed] img,
+.js-motion [data-reveal="mask"][data-revealed] .zoom-in {
+  transform: scale(1);
+}
+
+/* ---------- 6.2 Podčiarknutie kľúčového slova ---------- */
+.mark {
+  position: relative;
+  white-space: nowrap;
+}
+
+.mark::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.14em;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--p-accent);
+  transform-origin: left;
+  transition: transform var(--d-base) var(--e-out);
+  transition-delay: 260ms;
+}
+
+.js-motion .mark::after {
+  transform: scaleX(0);
+}
+
+.js-motion [data-revealed] .mark::after,
+.js-motion .mark[data-revealed]::after {
+  transform: scaleX(1);
+}
+
+/* ---------- 6.3 Eyebrow s narastajúcim ťahom ---------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eyebrow::before {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 24px;
+  background: var(--p-accent);
+  transition: width var(--d-base) var(--e-out);
+  transition-delay: 120ms;
+}
+
+.js-motion .eyebrow::before {
+  width: 0;
+}
+
+.js-motion [data-revealed] .eyebrow::before,
+.js-motion .eyebrow[data-revealed]::before {
+  width: 24px;
+}
+
+/* ---------- 6.4 Parallax — scroll-driven, bez JS ---------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax-up,
+    .parallax-down {
+      animation: parallaxY linear both;
+      animation-timeline: view();
+      animation-range: entry 0% exit 100%;
+    }
+
+    .parallax-down {
+      animation-direction: reverse;
+    }
+  }
+}
+
+@keyframes parallaxY {
+  from {
+    transform: translate3d(0, -4%, 0);
+  }
+  to {
+    transform: translate3d(0, 4%, 0);
+  }
+}
+
+/* ---------- 6.5 Ukazovateľ scrollu ---------- */
+.scroll-progress {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: var(--p-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 60;
+  pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    animation: progressGrow linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes progressGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ---------- 6.6 Blueprint — čiary sa samy nakreslia ---------- */
+.blueprint path,
+.blueprint line,
+.blueprint polyline {
+  stroke-dasharray: var(--len, 1200);
+  stroke-dashoffset: var(--len, 1200);
+  transition: stroke-dashoffset 1400ms var(--e-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.blueprint[data-revealed] path,
+.blueprint[data-revealed] line,
+.blueprint[data-revealed] polyline {
+  stroke-dashoffset: 0;
+}
+
+/* ---------- 6.7 Spojnica procesu — vypĺňa sa podľa scrollu ---------- */
+.process-line {
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .process-line {
+      animation: lineGrow linear both;
+      animation-timeline: view();
+      animation-range: entry 55% cover 65%;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .process-line {
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes lineGrowX {
+        to {
+          transform: scaleX(1);
+        }
+      }
+
+      .process-line {
+        animation-name: lineGrowX;
+      }
+    }
+  }
+}
+
+@keyframes lineGrow {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* Bez podpory scroll-driven animácií nech je spojnica jednoducho vidieť */
+@supports not (animation-timeline: view()) {
+  .process-line {
+    transform: none;
+  }
+}
+
+/* ---------- 6.8 Ikony, ktoré kreslia ťah pri hover ---------- */
+.icon-draw path,
+.icon-draw circle,
+.icon-draw rect,
+.icon-draw line,
+.icon-draw polyline {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 0;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .group:hover .icon-draw path,
+  .group:hover .icon-draw circle,
+  .group:hover .icon-draw rect,
+  .group:hover .icon-draw line,
+  .group:hover .icon-draw polyline {
+    animation: iconDraw 620ms var(--e-out);
+  }
+}
+
+@keyframes iconDraw {
+  from {
+    stroke-dashoffset: 120;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- 6.9 Tlačidlá ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3.25rem;
+  padding-inline: 1.75rem;
+  border-radius: var(--radius-card);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  transition:
+    transform var(--d-micro) var(--e-out),
+    background-color var(--d-micro) var(--e-out),
+    border-color var(--d-micro) var(--e-out),
+    box-shadow var(--d-short) var(--e-out);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-accent {
+  position: relative;
+  overflow: hidden;
+  background: var(--p-accent);
+  color: var(--p-dark);
+}
+
+.btn-accent:hover {
+  background: var(--p-accent-hover);
+  box-shadow: 0 12px 32px rgba(223, 255, 79, 0.28);
+}
+
+/* Sheen — raz pri vstupe kurzora, nie v slučke */
+.btn-accent::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 80%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .btn-accent:hover::after {
+    animation: sheen 620ms var(--e-out);
+  }
+}
+
+@keyframes sheen {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+.btn-outline-light {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: var(--p-white);
+}
+
+.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-dark {
+  background: var(--p-dark);
+  color: var(--p-white);
+}
+
+.btn-dark:hover {
+  background: var(--p-dark-2);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ---------- 6.10 Jemná akcentová žiara ---------- */
+.glow-accent {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(223, 255, 79, 0.05) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ---------- 6.11 Hlavička ---------- */
+.site-header {
+  transition:
+    background-color var(--d-short) var(--e-out),
+    border-color var(--d-short) var(--e-out);
+}
+
+/* ---------- 6.12 Vypnutý JavaScript ----------
+   Trieda `js-motion` je v HTML už zo servera (aby nevznikol hydration
+   mismatch). Bez JavaScriptu by teda obsah zostal skrytý — toto tomu bráni.
+*/
+.no-js [data-reveal] {
+  opacity: 1 !important;
+  transform: none !important;
+  clip-path: none !important;
+}
+
+.no-js [data-reveal="mask"] > * {
+  clip-path: none !important;
+}
+
+.no-js [data-reveal="mask"] img,
+.no-js [data-reveal="mask"] .zoom-in {
+  transform: none !important;
+}
+
+.no-js .mark::after {
+  transform: scaleX(1) !important;
+}
+
+.no-js .eyebrow::before {
+  width: 24px !important;
+}
+
+/* ============================================================
+   6.13 TLAČ
+   Tlačidlo „Uložiť ako PDF" v kalkulátore volá window.print(). Namiesto
+   ťažkej PDF knižnice použijeme tlač do PDF priamo z prehliadača — nulová
+   veľkosť bundlu a výsledok vyzerá ako normálny dokument.
+   ============================================================ */
+@media print {
+  .site-header,
+  footer,
+  .scroll-progress,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reveal animácie nesmú nechať obsah na papieri neviditeľný. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .container-max {
+    max-width: none;
+    padding-inline: 0;
+  }
+
+  /* Farebné plochy sa musia vytlačiť, inak zmizne zvýraznená cena. */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================================
+   7. REDUCED MOTION
+   Obsah musí zostať VIDITEĽNÝ, nie zamrznutý v počiatočnom stave.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    animation-timeline: none !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  [data-reveal="mask"] > * {
+    clip-path: none !important;
+  }
+
+  [data-reveal="mask"] img,
+  [data-reveal="mask"] .zoom-in {
+    transform: none !important;
+  }
+
+  .mark::after {
+    transform: scaleX(1) !important;
+  }
+
+  .eyebrow::before {
+    width: 24px !important;
+  }
+
+  .process-line {
+    transform: none !important;
+  }
+
+  .scroll-progress {
+    display: none;
+  }
+}
