@@ -103,7 +103,22 @@ export async function POST(request: Request) {
          </tr>`
       : "";
 
+  /**
+   * Kompletný HTML dokument s deklaráciou kódovania.
+   *
+   * Bez `<meta charset="utf-8">` si niektoré e-mailové klienty kódovanie
+   * hádajú a slovenská diakritika sa rozpadne na otázniky. Preto je tu celý
+   * dokument, nie len `<div>`.
+   */
   const html = `
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nový dopyt z webu</title>
+</head>
+<body style="margin:0;background:#ffffff">
 <div style="font-family:system-ui,-apple-system,'Segoe UI',sans-serif;max-width:640px;margin:0 auto;padding:24px;color:#111111">
   <p style="margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6b6b6b">Nový dopyt z webu</p>
   <h1 style="margin:0 0 24px;font-size:22px;line-height:1.3">${bezpecne(typProjektu || "Cenový kalkulátor")}</h1>
@@ -148,7 +163,9 @@ export async function POST(request: Request) {
   <p style="margin-top:28px;padding-top:16px;border-top:1px solid #e5e5e5;font-size:12px;color:#9a9a9a">
     Odoslané z kalkulátora na ${bezpecne(company.url)} · Odpoveď na tento e-mail pôjde priamo zákazníkovi.
   </p>
-</div>`.trim();
+</div>
+</body>
+</html>`.trim();
 
   try {
     const odpoved = await fetch(RESEND_API, {
