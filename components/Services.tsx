@@ -31,7 +31,7 @@ export default function Services() {
                     alt={service.alt}
                     fill
                     loading="lazy"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    sizes="(min-width: 1240px) 379px, (min-width: 1024px) calc(33vw - 32px), (min-width: 640px) calc(50vw - 40px), 100vw"
                     quality={80}
                     className="object-cover transition-transform duration-[var(--d-long)] group-hover:scale-[1.04]"
                   />
