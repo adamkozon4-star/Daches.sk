@@ -104,18 +104,61 @@ Vetva ponúkne telefón a e-mail.
 
 ---
 
-## ⚠️ Odosielanie dopytu je dočasné
+## Odosielanie dopytu
 
-`lib/kalkulator/odoslanie.ts` otvorí zákazníkovi e-mailového klienta
-s predvyplneným súhrnom. Funguje to hneď a nič sa nestratí, ale konverzia je
-horšia než pri priamom odoslaní.
+Zákazník klikne „Odoslať dopyt" a e-mail odíde firme — nemusí robiť nič ďalšie.
 
-**Toto treba vymeniť**, hneď ako bude kam posielať — API route na Verceli,
-n8n, GHL alebo e-mailová služba. Mení sa telo jednej funkcie, volajúci kód
-zostáva.
+```
+formulár  →  POST /api/dopyt  →  Resend API  →  schránka firmy
+```
 
-> Pozn.: pri `npm run export` (statický export) Route Handlers nefungujú.
-> Ak sa pôjde cez API route, web musí bežať na Verceli.
+`app/api/dopyt/route.ts` volá Resend priamo cez `fetch`, bez npm balíka —
+robil by presne to isté jedno POST volanie.
+
+**Čo route rieši:**
+
+| | |
+|---|---|
+| Validácia | meno, telefón, e-mail povinné; dĺžky orezané |
+| Bezpečnosť | vstupy escapované pred vložením do HTML e-mailu |
+| Spam | skryté pole (honeypot) — vyplnený dopyt sa ticho zahodí |
+| Odpoveď | `replyTo` je e-mail zákazníka → „Odpovedať" píše priamo jemu |
+| Kódovanie | e-mail je celý HTML dokument s `<meta charset="utf-8">` |
+
+**Poistka:** ak server zlyhá (výpadok Resendu, chýbajúci kľúč), klient spadne
+späť na `mailto:`. Dopyt sa nikdy nestratí, len prejde inou cestou.
+Potvrdzovacia obrazovka podľa toho rozlíši, čo sa stalo.
+
+### Premenné prostredia
+
+Názvy sú v `.env.example`. Hodnoty patria do Vercel → Settings →
+Environment Variables (a lokálne do `.env.local`, ktorý je v `.gitignore`).
+
+| Premenná | Načo |
+|---|---|
+| `RESEND_API_KEY` | kľúč z Resend → API keys |
+| `DOPYT_ODOSIELATEL` | napr. `Daches web <dopyt@send.daches.sk>` |
+| `DOPYT_PRIJEMCA` | kam dopyty chodia |
+
+⚠️ Po zmene premenných treba vo Verceli spraviť **Redeploy** — načítajú sa
+až pri novom nasadení.
+
+### ⚠️ Prečo subdoména `send.daches.sk`, nie `daches.sk`
+
+Hlavná doména už má SPF záznam pre firemný e-mail cez Websupport:
+
+```
+v=spf1 a mx include:_spf.m1.websupport.sk -all
+```
+
+**Dva SPF záznamy na jednom mene sú neplatné** a rozbili by doručovanie
+firemnej pošty. Subdoména má vlastný SPF a hlavnej sa nedotkne.
+
+### Statický export už nie je možný
+
+POST route handlery v `output: "export"` nefungujú. Navyše by vyžadoval
+`images.unoptimized`, čím by zanikli responzívne veľkosti fotiek. Web beží
+na Verceli, kde server je — podrobnosti v `next.config.ts`.
 
 ---
 
@@ -139,7 +182,9 @@ nie `<Link>`, aby si Next chunk neprefetchoval.
 ## Čo ešte chýba
 
 - [ ] **Sadzby od klienta** + prepnúť `STAV` na `"potvrdeny"`
-- [ ] **Skutočný endpoint** namiesto `mailto:`
+- [ ] **Overiť doménu `send.daches.sk`** v Resende + DNS na Websupporte
+      (bez toho chodia dopyty do spamu)
+- [x] ~~Skutočný endpoint namiesto `mailto:`~~ — hotové, Resend
 - [ ] **Nahrávanie fotiek** strechy k dopytu — fotky povedia o streche viac
       než akékoľvek zadané číslo. Potrebuje úložisko, takže až s backendom.
 - [ ] Zvážiť predvyplnenie z parametrov URL (kampane na konkrétnu službu)

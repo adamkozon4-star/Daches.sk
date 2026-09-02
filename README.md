@@ -6,7 +6,6 @@ Next.js 16 (App Router) · React 19 · Tailwind v4 · TypeScript.
 ```bash
 npm run dev      # vývoj na http://localhost:3000
 npm run build    # produkčný build (Vercel — s optimalizáciou obrázkov)
-npm run export   # statický export do out/ — nahrateľný kamkoľvek
 npm run lint
 ```
 
@@ -104,10 +103,13 @@ načíta až po kliknutí, písmo self-hostované s dvoma váhami.
 - [ ] **`aggregateRating`** doplniť do JSON-LD až s reálnymi recenziami.
 - [ ] **Cenové sadzby kalkulátora** — `lib/kalkulator/cennik.ts` má `STAV = "navrh"`
       a odhadnuté trhové ceny. Nechať klienta prejsť a prepnúť na `"potvrdeny"`.
-- [ ] **Odosielanie dopytu z kalkulátora** — teraz `mailto:`, nahradiť endpointom.
+- [ ] **Overiť doménu `send.daches.sk` v Resende** + DNS záznamy na Websupporte.
+      Bez toho dopyty padajú do spamu (posielajú sa z testovacej adresy Resendu).
+- [ ] **Premenné prostredia vo Verceli** — `RESEND_API_KEY`, `DOPYT_ODOSIELATEL`,
+      `DOPYT_PRIJEMCA`. Názvy sú v `.env.example`.
 
 ## Čo zostáva dorobiť
 
-**Cenový kalkulátor** na `/kalkulator` je hotový a funkčný, ale beží
-na nepotvrdených sadzbách a dopyt zatiaľ odchádza cez `mailto:`.
-Podrobnosti a checklist v [KALKULATOR.md](KALKULATOR.md).
+**Cenový kalkulátor** na `/kalkulator` je hotový a odosiela dopyty e-mailom
+cez Resend. Zostáva overiť odosielaciu doménu a doplniť skutočné cenové
+sadzby od klienta. Podrobnosti v [KALKULATOR.md](KALKULATOR.md).
