@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Phone, Printer, Send } from "lucide-react";
+import { AlertTriangle, Check, Phone, Printer, Send } from "lucide-react";
 import { company } from "@/lib/content";
 import { DPH, STAV } from "@/lib/kalkulator/cennik";
 import { odosliDopyt, type Kontakt } from "@/lib/kalkulator/odoslanie";
@@ -14,6 +14,7 @@ const prazdnyKontakt: Kontakt = {
   email: "",
   adresa: "",
   poznamka: "",
+  web: "",
 };
 
 export default function Vysledok({
@@ -25,7 +26,8 @@ export default function Vysledok({
 }) {
   const [kontakt, setKontakt] = useState<Kontakt>(prazdnyKontakt);
   const [suhlas, setSuhlas] = useState(false);
-  const [odoslane, setOdoslane] = useState(false);
+  const [odoslane, setOdoslane] = useState<null | "server" | "email">(null);
+  const [odosiela, setOdosiela] = useState(false);
   const [chyba, setChyba] = useState<string | null>(null);
 
   const material = vysledok.polozky.filter((p) => p.skupina === "material");
@@ -46,8 +48,13 @@ export default function Vysledok({
     }
 
     setChyba(null);
-    await odosliDopyt(vstup, vysledok, kontakt);
-    setOdoslane(true);
+    setOdosiela(true);
+    try {
+      const v = await odosliDopyt(vstup, vysledok, kontakt);
+      setOdoslane(v.sposob);
+    } finally {
+      setOdosiela(false);
+    }
   };
 
   return (
@@ -131,7 +138,22 @@ export default function Vysledok({
 
       {/* Dopyt */}
       <div className="rounded-panel border border-line bg-light p-6 md:p-8 print:hidden">
-        {odoslane ? (
+        {odoslane === "server" ? (
+          <div className="py-6 text-center">
+            <span
+              aria-hidden="true"
+              className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-accent"
+            >
+              <Check size={26} strokeWidth={3} className="text-dark" />
+            </span>
+            <h3 className="text-h3 mt-5 text-dark">Dopyt sme dostali</h3>
+            <p className="mx-auto mt-3 max-w-[48ch] text-sm leading-relaxed text-muted">
+              Ozveme sa vám na <strong className="text-dark">{kontakt.telefon}</strong>,
+              zvyčajne do jedného pracovného dňa. Prejdeme si zadanie a dohodneme
+              termín bezplatnej obhliadky.
+            </p>
+          </div>
+        ) : odoslane === "email" ? (
           <div className="py-6 text-center">
             <h3 className="text-h3 text-dark">Otvorili sme vám e-mail</h3>
             <p className="mx-auto mt-3 max-w-[46ch] text-sm leading-relaxed text-muted">
@@ -216,9 +238,31 @@ export default function Vysledok({
               <p className="mt-4 text-sm text-red-500">{chyba}</p>
             ) : null}
 
-            <button type="button" onClick={posli} className="btn btn-accent mt-6">
+            {/*
+              Pasca na roboty. Je skrytá pred ľuďmi aj čítačkami obrazovky —
+              vyplní ju len automat, a vtedy dopyt ticho zahodíme.
+            */}
+            <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+              <label>
+                Nevypĺňajte
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={kontakt.web ?? ""}
+                  onChange={(e) => uprav("web", e.target.value)}
+                />
+              </label>
+            </div>
+
+            <button
+              type="button"
+              onClick={posli}
+              disabled={odosiela}
+              className="btn btn-accent mt-6 disabled:cursor-not-allowed disabled:opacity-60"
+            >
               <Send size={16} strokeWidth={2.5} aria-hidden="true" />
-              Odoslať dopyt
+              {odosiela ? "Odosielam…" : "Odoslať dopyt"}
             </button>
           </>
         )}

@@ -1,26 +1,24 @@
 import type { NextConfig } from "next";
 
 /**
- * Statický export sa zapína premennou STATIC_EXPORT=1 — bežný vývoj
- * aj nasadenie na Vercel tým zostávajú nedotknuté (vrátane optimalizácie
- * obrázkov, ktorú statický export nepodporuje).
+ * Web beží na Verceli a potrebuje server — kvôli route handleru `/api/dopyt`,
+ * ktorý odosiela dopyty z kalkulátora e-mailom.
  *
- *   npm run export   → vygeneruje priečinok out/ na nahratie kamkoľvek
+ * Statický export (`output: "export"`) tu bol pôvodne ako alternatíva, ale
+ * bol by to horší web v každom smere:
+ *   • POST route handlery v ňom nefungujú → formulár by prestal odosielať
+ *   • vyžaduje `images.unoptimized` → zmizne responzívne servírovanie fotiek
+ *     a posielali by sa originály namiesto správnych veľkostí
+ * Preto je odstránený, nie opravovaný.
  */
-const isStaticExport = process.env.STATIC_EXPORT === "1";
-
 const nextConfig: NextConfig = {
-  ...(isStaticExport
-    ? { output: "export", images: { unoptimized: true } }
-    : {
-        images: {
-          // Moderné formáty pre LCP — AVIF s WebP fallbackom.
-          formats: ["image/avif", "image/webp"],
-          // Next 16 vyžaduje povolené hodnoty vopred.
-          // 70 = miniatúry, 80 = obsahové fotky, 85 = lightbox.
-          qualities: [70, 80, 85],
-        },
-      }),
+  images: {
+    // Moderné formáty pre LCP — AVIF s WebP fallbackom.
+    formats: ["image/avif", "image/webp"],
+    // Next 16 vyžaduje povolené hodnoty vopred.
+    // 70 = miniatúry, 80 = obsahové fotky, 85 = lightbox.
+    qualities: [70, 80, 85],
+  },
 };
 
 export default nextConfig;

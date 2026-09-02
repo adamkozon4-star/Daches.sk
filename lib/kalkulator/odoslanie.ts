@@ -10,33 +10,69 @@ export type Kontakt = {
   email: string;
   adresa: string;
   poznamka: string;
+  /** Pasca na roboty — v UI je toto pole skryté a človek ho nevyplní. */
+  web?: string;
+};
+
+export type VysledokOdoslania = {
+  ok: boolean;
+  /**
+   * `server`  — dopyt odišiel e-mailom firme, zákazník nemusí robiť nič
+   * `email`   — server zlyhal, otvorili sme zákazníkovi e-mailový program
+   */
+  sposob: "server" | "email";
 };
 
 /**
- * ⚠️ DOČASNÉ RIEŠENIE — nahradiť skutočným endpointom.
+ * Odoslanie dopytu.
  *
- * Web zatiaľ nemá backend, takže dopyt sa otvorí v e-mailovom klientovi
- * zákazníka. Funguje to hneď a nič sa nestratí, ale konverzia je horšia,
- * než keď sa formulár odošle priamo.
- *
- * Až bude kam posielať (API route na Verceli, n8n, GHL, e-mailová služba),
- * vymení sa telo tejto funkcie — volajúci kód sa meniť nemusí.
+ * Primárne ide na `/api/dopyt`, ktorý pošle e-mail cez Resend. Ak by to
+ * z akéhokoľvek dôvodu zlyhalo (výpadok Resendu, chýbajúci API kľúč,
+ * offline zákazník), spadne to na `mailto:` — dopyt sa teda nikdy
+ * nestratí, len prejde inou cestou.
  */
 export async function odosliDopyt(
   vstup: Vstup,
   vysledok: Vysledok | null,
   kontakt: Kontakt,
-): Promise<{ ok: boolean; sposob: "email" }> {
-  const telo = zostavSuhrn(vstup, vysledok, kontakt);
-  const predmet = `Dopyt z kalkulátora — ${nazovProjektu(vstup)}`;
+): Promise<VysledokOdoslania> {
+  const suhrn = zostavSuhrn(vstup, vysledok, kontakt);
 
-  const url =
+  try {
+    const odpoved = await fetch("/api/dopyt", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        meno: kontakt.meno,
+        telefon: kontakt.telefon,
+        email: kontakt.email,
+        adresa: kontakt.adresa,
+        poznamka: kontakt.poznamka,
+        web: kontakt.web ?? "",
+        typProjektu: nazovProjektu(vstup),
+        cena: vysledok ? `${rozsahEur(vysledok.spolu)} bez DPH` : "",
+        suhrn,
+      }),
+    });
+
+    if (odpoved.ok) {
+      const data = (await odpoved.json()) as { ok?: boolean };
+      if (data.ok) return { ok: true, sposob: "server" };
+    }
+  } catch {
+    // Ticho — nižšie je náhradná cesta.
+  }
+
+  otvorEmailovyProgram(suhrn, vstup);
+  return { ok: true, sposob: "email" };
+}
+
+function otvorEmailovyProgram(suhrn: string, vstup: Vstup) {
+  const predmet = `Dopyt z kalkulátora — ${nazovProjektu(vstup)}`;
+  window.location.href =
     `mailto:${company.email}` +
     `?subject=${encodeURIComponent(predmet)}` +
-    `&body=${encodeURIComponent(telo)}`;
-
-  window.location.href = url;
-  return { ok: true, sposob: "email" };
+    `&body=${encodeURIComponent(suhrn)}`;
 }
 
 const nazovProjektu = (v: Vstup) =>
@@ -77,9 +113,7 @@ export function zostavSuhrn(
 
     if (vysledok) {
       r.push("");
-      r.push(
-        `ORIENTAČNÝ ROZSAH (bez DPH): ${rozsahEur(vysledok.spolu)}`,
-      );
+      r.push(`ORIENTAČNÝ ROZSAH (bez DPH): ${rozsahEur(vysledok.spolu)}`);
       r.push(`DPH ${DPH} % sa pripočítava.`);
       r.push("Ide o odhad, nie o záväznú ponuku.");
     }
