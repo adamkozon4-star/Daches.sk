@@ -23,6 +23,18 @@ const ODOSIELATEL = process.env.DOPYT_ODOSIELATEL ?? "Daches web <dopyt@daches.s
 /** Kam dopyt chodí. Predvolene firemný e-mail z obsahu webu. */
 const PRIJEMCA = process.env.DOPYT_PRIJEMCA ?? company.email;
 
+/**
+ * Skrytá kópia (voliteľné). Hodí sa správcovi webu na kontrolu, že dopyty
+ * naozaj chodia — bez potreby prístupu do klientovej schránky.
+ *
+ * Posiela sa ako BCC, takže zákazník ani klient túto adresu nevidia.
+ * Viac adries oddeľ čiarkou. Prázdna premenná = kópia sa neposiela.
+ */
+const KOPIA = (process.env.DOPYT_KOPIA ?? "")
+  .split(",")
+  .map((a) => a.trim())
+  .filter(Boolean);
+
 type Telo = {
   suhrn?: string;
   meno?: string;
@@ -177,6 +189,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         from: ODOSIELATEL,
         to: [PRIJEMCA],
+        ...(KOPIA.length ? { bcc: KOPIA } : {}),
         // Vďaka tomuto stačí v schránke kliknúť „Odpovedať" a píše sa zákazníkovi.
         replyTo: email,
         subject: `Dopyt: ${typProjektu || "kalkulátor"} — ${meno}`,
