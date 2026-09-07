@@ -114,7 +114,7 @@ export const doplnky: Record<Doplnok, SadzbaDoplnku> = {
     praca: { min: 3.5, max: 5.5 },
   },
   debnenie: {
-    nazov: "Nové debnenie",
+    nazov: "Plné debnenie",
     jednotka: "m²",
     material: { min: 12.5, max: 16.5 },
     praca: { min: 8, max: 11 },
@@ -126,13 +126,13 @@ export const doplnky: Record<Doplnok, SadzbaDoplnku> = {
     praca: { min: 3.5, max: 5.5 },
   },
   kontralatovanie: {
-    nazov: "Kontralatovanie",
+    nazov: "Kontralaty",
     jednotka: "m²",
     material: { min: 2.5, max: 3.5 },
     praca: { min: 2.5, max: 3.5 },
   },
-  poistna_hydroizolacia: {
-    nazov: "Poistná hydroizolácia",
+  paropriepustna_folia: {
+    nazov: "Paropriepustná fólia",
     jednotka: "m²",
     material: { min: 2.5, max: 4 },
     praca: { min: 2.5, max: 3.5 },
@@ -143,11 +143,35 @@ export const doplnky: Record<Doplnok, SadzbaDoplnku> = {
     material: { min: 17, max: 23 },
     praca: { min: 9, max: 13 },
   },
-  oplechovanie_kominov: {
-    nazov: "Oplechovanie komína",
+  /**
+   * Komínové oplechovanie sa robí v dvoch etapách: spodné ide pod krytinu
+   * ešte pri jej kladení, vrchné (krycie) sa dokončuje až na nej. Zákazník
+   * si môže objednať celok alebo len jednu etapu — druhú má napríklad
+   * hotovú z minula.
+   *
+   * Súčet oboch etáp je zámerne mierne vyšší než komplet (1,05×). Robiť ich
+   * na dva krát znamená druhý príchod na stavbu a druhé lešenie.
+   *
+   * V UI sa „komplet" a jednotlivé etapy navzájom vylučujú — inak by sa
+   * to isté oplechovanie naúčtovalo dvakrát.
+   */
+  oplechovanie_komina_komplet: {
+    nazov: "Oplechovanie komína — komplet",
     jednotka: "ks",
     material: { min: 85, max: 115 },
     praca: { min: 170, max: 230 },
+  },
+  oplechovanie_komina_spodne: {
+    nazov: "Oplechovanie komína — spodné (pod krytinu)",
+    jednotka: "ks",
+    material: { min: 50, max: 68 },
+    praca: { min: 100, max: 136 },
+  },
+  oplechovanie_komina_vrchne: {
+    nazov: "Oplechovanie komína — vrchné (krycie)",
+    jednotka: "ks",
+    material: { min: 39, max: 53 },
+    praca: { min: 79, max: 107 },
   },
   stresne_okno: {
     nazov: "Strešné okno vrátane lemovania a montáže",
@@ -167,11 +191,19 @@ export const doplnky: Record<Doplnok, SadzbaDoplnku> = {
     material: { min: 20, max: 26 },
     praca: { min: 7, max: 11 },
   },
-  tepelna_izolacia: {
-    nazov: "Tepelná izolácia",
+  /**
+   * ⚠️ Sadzba sa oproti pôvodnej „tepelnej izolácii" zvýšila.
+   *
+   * Nadkrokvová PIR je iný výrobok než minerálna vlna medzi krokvy —
+   * dosky s hliníkovým povrchom a perodrážkou stoja rádovo dvojnásobok.
+   * Ponechať pôvodných 12 – 17 €/m² pod novým názvom by znamenalo
+   * podstrelenú cenu. Aj toto číslo je odhad na odsúhlasenie klientom.
+   */
+  nadkrokvova_izolacia_pir: {
+    nazov: "Nadkrokvová izolácia PIR",
     jednotka: "m²",
-    material: { min: 12, max: 17 },
-    praca: { min: 7, max: 10 },
+    material: { min: 28, max: 38 },
+    praca: { min: 11, max: 15 },
   },
   parozabrana: {
     nazov: "Parozábrana",

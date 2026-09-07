@@ -120,7 +120,7 @@ export function vypocitaj(vstup: Vstup): Vysledok {
     let vymer = plocha;
     if (s.jednotka === "bm") vymer = vymery.okap;
     if (s.jednotka === "ks") {
-      if (kluc === "oplechovanie_kominov") vymer = pocty.kominy;
+      if (kluc.startsWith("oplechovanie_komina")) vymer = pocty.kominy;
       else if (kluc === "stresne_okno") vymer = pocty.okna;
       else vymer = 1;
     }

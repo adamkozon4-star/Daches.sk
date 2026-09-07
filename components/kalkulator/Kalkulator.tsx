@@ -501,6 +501,22 @@ function KrokRozmery({
   );
 }
 
+/**
+ * Doplnky, ktoré sa navzájom vylučujú.
+ *
+ * Komplet oplechovanie komína a jeho jednotlivé etapy sú to isté dielo —
+ * keby sa dali zaškrtnúť naraz, zákazník by ho v rozpočte videl dvakrát.
+ * Zaškrtnutie jednej strany preto druhú odškrtne.
+ */
+const VYLUCUJE_SA: Partial<Record<Doplnok, Doplnok[]>> = {
+  oplechovanie_komina_komplet: [
+    "oplechovanie_komina_spodne",
+    "oplechovanie_komina_vrchne",
+  ],
+  oplechovanie_komina_spodne: ["oplechovanie_komina_komplet"],
+  oplechovanie_komina_vrchne: ["oplechovanie_komina_komplet"],
+};
+
 /* ---------- Krok: doplnky ---------- */
 function KrokDoplnky({
   typProjektu,
@@ -514,10 +530,16 @@ function KrokDoplnky({
   const dostupne = doplnkyPodlaProjektu[typProjektu];
 
   const prepni = (d: Doplnok, zapnut: boolean) =>
-    setStav((s) => ({
-      ...s,
-      doplnky: zapnut ? [...s.doplnky, d] : s.doplnky.filter((x) => x !== d),
-    }));
+    setStav((s) => {
+      if (!zapnut) return { ...s, doplnky: s.doplnky.filter((x) => x !== d) };
+
+      // Zapnutie položky vypne tie, ktoré sa s ňou vylučujú.
+      const kolizie = VYLUCUJE_SA[d] ?? [];
+      return {
+        ...s,
+        doplnky: [...s.doplnky.filter((x) => !kolizie.includes(x)), d],
+      };
+    });
 
   return (
     <section aria-label="Doplnky">
@@ -539,7 +561,7 @@ function KrokDoplnky({
               zaskrtnute={zaskrtnute}
               onChange={(v) => prepni(d, v)}
             >
-              {zaskrtnute && d === "oplechovanie_kominov" ? (
+              {zaskrtnute && d.startsWith("oplechovanie_komina") ? (
                 <PocetKusov
                   label="Počet komínov"
                   hodnota={stav.pocty.kominy}

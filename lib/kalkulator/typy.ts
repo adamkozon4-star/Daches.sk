@@ -47,13 +47,15 @@ export type Doplnok =
   | "debnenie"
   | "latovanie"
   | "kontralatovanie"
-  | "poistna_hydroizolacia"
+  | "paropriepustna_folia"
   | "odkvapovy_system"
-  | "oplechovanie_kominov"
+  | "oplechovanie_komina_komplet"
+  | "oplechovanie_komina_spodne"
+  | "oplechovanie_komina_vrchne"
   | "stresne_okno"
   | "stresny_vylez"
   | "sneholamy"
-  | "tepelna_izolacia"
+  | "nadkrokvova_izolacia_pir"
   | "parozabrana"
   | "podhladove_plechy";
 

@@ -65,6 +65,19 @@ tvoril zhruba 2 % celkovej ceny.
 Overené na 130 m² sedlovej streche na kľúč: pozink 20 000 – 27 500 €,
 hliník 21 500 – 30 000 €.
 
+### Dve sadzby, ktoré si žiadajú pozornosť klienta
+
+**Nadkrokvová izolácia PIR** — pôvodne to bola všeobecná „tepelná izolácia"
+za 12 – 17 €/m². PIR dosky s hliníkovým povrchom stoja rádovo dvojnásobok,
+takže sadzba stúpla na 28 – 38 €/m². Ponechať staré číslo pod novým názvom
+by znamenalo podstrelenú cenu.
+
+**Oplechovanie komína** je rozdelené na komplet a dve etapy — spodné (ide
+pod krytinu pri jej kladení) a vrchné (krycie). Súčet etáp je zámerne
+1,05× komplet: druhý príchod na stavbu niečo stojí. V UI sa komplet
+a etapy navzájom vylučujú (`VYLUCUJE_SA` v `Kalkulator.tsx`), inak by sa
+to isté dielo naúčtovalo dvakrát.
+
 ### Prečo sú rozpätia úzke
 
 Každá sadzba je `{min, max}` v rozmedzí zhruba ±15 %. Rozdiel medzi lacnejším
