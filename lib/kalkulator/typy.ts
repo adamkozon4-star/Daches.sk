@@ -24,6 +24,12 @@ export type Krytina =
 
 export type Trieda = "zaklad" | "standard" | "premium";
 
+/**
+ * Materiál plechovej krytiny. Týka sa len krytín, ktoré sa vyrábajú z oboch —
+ * v `moznosti.ts` to označuje príznak `volbaPlechu`.
+ */
+export type Plech = "pozink" | "hlinik";
+
 export type Sklon = "nizky" | "bezny" | "strmy";
 
 /** Výmery v bežných metroch. Odvodzujú sa z plochy a tvaru strechy. */
@@ -58,6 +64,8 @@ export type Vstup = {
   plocha: number;
   sklon: Sklon;
   krytina: Krytina;
+  /** Uplatní sa len pri krytine s `volbaPlechu`; inak sa ignoruje. */
+  plech: Plech;
   trieda: Trieda;
   vymery: Vymery;
   /** Používateľ prepísal automaticky odvodené výmery. */

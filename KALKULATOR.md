@@ -46,8 +46,24 @@ v rámčeku nad rozpisom.
 Nič iné meniť netreba.
 
 Klient má prejsť zhruba 40 čísel — €/m² krytín a montáže, konštrukcia,
-demontáž, doplnky a €/bm klampiarskych prvkov. Sú v jednom súbore
-a pomenované po slovensky.
+demontáž, doplnky a €/bm klampiarskych prvkov, plus násobky za triedu
+materiálu a za hliník. Sú v jednom súbore a pomenované po slovensky.
+
+### Materiál plechu (pozink / hliník)
+
+Falcovaná krytina má navyše výber materiálu plechu — oba vo farebnom
+prevedení. Ktoré krytiny voľbu ponúkajú, určuje príznak `volbaPlechu`
+v `moznosti.ts`; pri ostatných sa krok vôbec nezobrazí, nech sa zákazník
+nerozhoduje o niečom, čo výsledok neovplyvní.
+
+Cenu rieši `plechNasobok` v `cennik.ts` — **násobok materiálu krytiny**,
+nie celej ceny. Hliník = 1,45× (odhad trhového pomeru, patrí medzi čísla
+na odsúhlasenie klientom). Montáž sa nemení a klampiarske prvky sa
+nenásobia — sú v cenníku ako celok materiál + práca a rozdiel by v nich
+tvoril zhruba 2 % celkovej ceny.
+
+Overené na 130 m² sedlovej streche na kľúč: pozink 20 000 – 27 500 €,
+hliník 21 500 – 30 000 €.
 
 ### Prečo sú rozpätia úzke
 

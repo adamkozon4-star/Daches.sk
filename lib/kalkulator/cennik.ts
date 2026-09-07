@@ -1,4 +1,4 @@
-import type { Doplnok, Krytina, Rozsah, Trieda } from "@/lib/kalkulator/typy";
+import type { Doplnok, Krytina, Plech, Rozsah, Trieda } from "@/lib/kalkulator/typy";
 
 /**
  * ╔══════════════════════════════════════════════════════════════════════╗
@@ -46,6 +46,25 @@ export const triedaNasobok: Record<Trieda, number> = {
   zaklad: 0.82,
   standard: 1,
   premium: 1.28,
+};
+
+/**
+ * Materiál plechu — násobok ceny materiálu krytiny.
+ *
+ * Hliníkový plech je v obstarávaní výrazne drahší než pozinkovaná oceľ.
+ * Násobok je odhad trhového pomeru, rovnako ako zvyšok cenníka (STAV = "navrh").
+ *
+ * Uplatňuje sa iba na materiál krytiny:
+ *   • montáž sa nemení — hliník sa spracúva porovnateľne ako oceľ,
+ *   • klampiarske prvky sú v cenníku ako celok materiál + práca a rozdiel
+ *     v materiáli by v nich tvoril zhruba 2 % celkovej ceny. Radšej ho
+ *     neroztierame odhadom cez položku, ktorá sa takto nedelí.
+ *
+ * Násobok platí len pre krytinu s `volbaPlechu` v `moznosti.ts`.
+ */
+export const plechNasobok: Record<Plech, number> = {
+  pozink: 1,
+  hlinik: 1.45,
 };
 
 /** Montáž krytiny — €/m². Falcovaná je prácnejšia než skladaná. */

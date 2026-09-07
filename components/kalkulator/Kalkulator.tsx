@@ -9,7 +9,9 @@ import {
 import {
   doplnkyPodlaProjektu,
   krytiny,
+  maVolbuPlechu,
   nazvyVymerov,
+  plechy,
   predvoleneDoplnky,
   sklony,
   triedy,
@@ -26,6 +28,7 @@ import { cislo, vypocitaj } from "@/lib/kalkulator/vypocet";
 import type {
   Doplnok,
   Krytina,
+  Plech,
   Sklon,
   Trieda,
   TypProjektu,
@@ -40,6 +43,7 @@ type Stav = {
   plocha: number | "";
   sklon: Sklon;
   krytina: Krytina;
+  plech: Plech;
   trieda: Trieda;
   doplnky: Doplnok[];
   pocty: { kominy: number; okna: number };
@@ -52,6 +56,7 @@ const vychodzi: Stav = {
   plocha: "",
   sklon: "bezny",
   krytina: "falcovana",
+  plech: "pozink",
   trieda: "standard",
   doplnky: [],
   pocty: { kominy: 1, okna: 0 },
@@ -93,6 +98,7 @@ export default function Kalkulator() {
       plocha: typeof stav.plocha === "number" ? stav.plocha : 0,
       sklon: stav.sklon,
       krytina: stav.krytina,
+      plech: stav.plech,
       trieda: stav.trieda,
       vymery,
       vymeryRucne: stav.vymeryRucne,
@@ -274,6 +280,27 @@ export default function Kalkulator() {
                 />
               ))}
             </div>
+
+            {maVolbuPlechu(stav.krytina) ? (
+              <>
+                <h3 className="text-h3 mt-10 text-dark">Materiál plechu</h3>
+                <p className="mt-2 max-w-[62ch] text-sm text-muted">
+                  Oba sa dodávajú vo farebnom prevedení. Hliník je ľahší
+                  a nehrdzavie, no v obstarávaní vychádza drahšie.
+                </p>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {plechy.map((m) => (
+                    <Prepinac
+                      key={m.id}
+                      nazov={m.nazov}
+                      popis={m.popis}
+                      vybrane={stav.plech === m.id}
+                      onClick={() => setStav((s) => ({ ...s, plech: m.id }))}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : null}
 
             <h3 className="text-h3 mt-10 text-dark">Trieda materiálu</h3>
             <p className="mt-2 max-w-[62ch] text-sm text-muted">

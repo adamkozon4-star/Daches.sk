@@ -1,6 +1,7 @@
 import type {
   Doplnok,
   Krytina,
+  Plech,
   Sklon,
   Trieda,
   TypProjektu,
@@ -62,11 +63,18 @@ export const krytiny: {
   id: Krytina;
   nazov: string;
   popis: string;
+  /**
+   * Krytina sa vyrába z pozinku aj z hliníka — kalkulátor pri nej ponúkne
+   * výber materiálu plechu. Pri ostatných krytinách sa krok nezobrazuje,
+   * aby sa zákazník nerozhodoval o niečom, čo výsledok neovplyvní.
+   */
+  volbaPlechu?: boolean;
 }[] = [
   {
     id: "falcovana",
     nazov: "Falcovaná plechová",
     popis: "Bez viditeľného kotvenia, dlhá životnosť. Vhodná aj na nízky sklon.",
+    volbaPlechu: true,
   },
   {
     id: "skridlovy_plech",
@@ -89,6 +97,23 @@ export const krytiny: {
     popis: "Tichý, tvarovo prispôsobivý, vhodný na členité strechy.",
   },
 ];
+
+export const plechy: { id: Plech; nazov: string; popis: string }[] = [
+  {
+    id: "pozink",
+    nazov: "Pozink (farebný)",
+    popis: "Oceľový plech so zinkovou ochranou a farebnou povrchovou vrstvou.",
+  },
+  {
+    id: "hlinik",
+    nazov: "Hliník (farebný)",
+    popis: "Ľahší a nehrdzavie, no v obstarávaní drahší než pozink.",
+  },
+];
+
+/** Ponúka daná krytina výber materiálu plechu? Jediný zdroj pravdy. */
+export const maVolbuPlechu = (k: Krytina) =>
+  krytiny.find((x) => x.id === k)?.volbaPlechu ?? false;
 
 export const triedy: {
   id: Trieda;

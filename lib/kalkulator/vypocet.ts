@@ -4,10 +4,12 @@ import {
   konstrukcia,
   krytinaMaterial,
   krytinaMontaz,
+  plechNasobok,
   prirazkaNaOdpad,
   sklonPriplatok,
   triedaNasobok,
 } from "@/lib/kalkulator/cennik";
+import { maVolbuPlechu, plechy } from "@/lib/kalkulator/moznosti";
 import type {
   Polozka,
   Rozsah,
@@ -49,8 +51,24 @@ export function vypocitaj(vstup: Vstup): Vysledok {
     polozky.push({ skupina, nazov, vymer, jednotka, cena: nasob(sadzba, vymer) });
   };
 
-  const { plocha, typProjektu, krytina, trieda, sklon, vymery, doplnky, pocty } =
-    vstup;
+  const {
+    plocha,
+    typProjektu,
+    krytina,
+    plech,
+    trieda,
+    sklon,
+    vymery,
+    doplnky,
+    pocty,
+  } = vstup;
+
+  /**
+   * Materiál plechu sa uplatní len pri krytine, ktorá ho ponúka. Pri škridle
+   * či šindli by násobok nedával zmysel — voľba sa tam ani nezobrazuje.
+   */
+  const jePlech = maVolbuPlechu(krytina);
+  const nasobokPlechu = jePlech ? plechNasobok[plech] : 1;
 
   const priplatokZaSklon = sklonPriplatok[sklon];
 
@@ -72,12 +90,18 @@ export function vypocitaj(vstup: Vstup): Vysledok {
     // rovnaký počet m² krytiny.
     const plochaKrytiny = Math.round(plocha * prirazkaNaOdpad * 10) / 10;
 
+    // Materiál plechu patrí do názvu položky — v rozpise aj v tlačenej
+    // ponuke je tak vidieť, z čoho je cena počítaná.
+    const nazovKrytiny = jePlech
+      ? `Krytina — ${plechy.find((x) => x.id === plech)?.nazov ?? plech}, vrátane prirážky na odpad a prekrytie`
+      : "Krytina vrátane prirážky na odpad a prekrytie";
+
     pridaj(
       "material",
-      "Krytina vrátane prirážky na odpad a prekrytie",
+      nazovKrytiny,
       plochaKrytiny,
       "m²",
-      nasob(krytinaMaterial[krytina], triedaNasobok[trieda]),
+      nasob(krytinaMaterial[krytina], triedaNasobok[trieda] * nasobokPlechu),
     );
 
     pridaj(

@@ -1,6 +1,12 @@
 import { company } from "@/lib/content";
 import { DPH } from "@/lib/kalkulator/cennik";
-import { krytiny, typyProjektu, typyStrechy } from "@/lib/kalkulator/moznosti";
+import {
+  krytiny,
+  maVolbuPlechu,
+  plechy,
+  typyProjektu,
+  typyStrechy,
+} from "@/lib/kalkulator/moznosti";
 import { cislo, rozsahEur } from "@/lib/kalkulator/vypocet";
 import type { Vstup, Vysledok } from "@/lib/kalkulator/typy";
 
@@ -98,6 +104,12 @@ export function zostavSuhrn(
     r.push(`Plocha strechy: ${cislo(vstup.plocha)} m²`);
     r.push(`Sklon: ${vstup.sklon}`);
     r.push(`Krytina: ${krytina} (trieda ${vstup.trieda})`);
+
+    // Materiál plechu má zmysel len tam, kde sa zákazníka naň pýtame.
+    if (maVolbuPlechu(vstup.krytina)) {
+      const material = plechy.find((x) => x.id === vstup.plech)?.nazov;
+      r.push(`Materiál plechu: ${material}`);
+    }
     r.push("");
     r.push(
       `Výmery${vstup.vymeryRucne ? " (zadané ručne)" : " (odhad z plochy)"}:`,
