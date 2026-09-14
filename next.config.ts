@@ -19,6 +19,28 @@ const nextConfig: NextConfig = {
     // 70 = miniatúry, 80 = obsahové fotky, 85 = lightbox.
     qualities: [70, 80, 85],
   },
+
+  /**
+   * Produkčný alias na Verceli presmeruje na vlastnú doménu.
+   *
+   * Bez toho beží celý web aj na daches-sk.vercel.app s kódom 200 — Google
+   * tak vidí dve kópie toho istého webu. Canonical na daches.sk je len
+   * odporúčanie, 308 je jednoznačný pokyn a prenesie aj prípadné odkazy.
+   *
+   * Pravidlo zachytí iba presne tento host. Náhľadové nasadenia
+   * (daches-sk-git-….vercel.app) ostávajú dostupné — tie Vercel sám
+   * označuje hlavičkou `x-robots-tag: noindex`.
+   */
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "daches-sk.vercel.app" }],
+        destination: "https://daches.sk/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
