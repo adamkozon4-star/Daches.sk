@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
 import { company, footer, navLinks } from "@/lib/content";
+import { sluzby } from "@/lib/sluzby";
 import { brandLogo } from "@/lib/images";
 
 export default function Footer() {
   return (
     <footer className="bg-dark">
       <div className="container-max py-16 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
           <div>
             <Image
               src={brandLogo}
@@ -49,6 +50,34 @@ export default function Footer() {
                   </a>
                 </li>
               ))}
+            </ul>
+          </nav>
+
+          {/*
+            Služby v pätke sú odkazy z každej stránky webu — bez nich by na
+            podstránky viedla len mriežka na úvodnej a boli by takmer osirotené.
+          */}
+          <nav aria-label="Služby">
+            <p className="text-eyebrow uppercase text-white/40">Služby</p>
+            <ul className="mt-5 flex flex-col gap-3">
+              {sluzby.map((s) => (
+                <li key={s.slug}>
+                  <Link
+                    href={`/sluzby/${s.slug}`}
+                    className="text-sm text-white/70 transition-colors duration-[var(--d-micro)] hover:text-white"
+                  >
+                    {s.navLabel}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href="/kalkulator"
+                  className="text-sm text-white/70 transition-colors duration-[var(--d-micro)] hover:text-white"
+                >
+                  Cenový kalkulátor
+                </Link>
+              </li>
             </ul>
           </nav>
 

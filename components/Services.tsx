@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import { services } from "@/lib/content";
+import { najdiSluzbu } from "@/lib/sluzby";
 
 export default function Services() {
   return (
@@ -22,7 +23,11 @@ export default function Services() {
         />
 
         <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-          {services.map((service, i) => (
+          {services.map((service, i) => {
+            // Služby s vlastnou podstránkou vedú na ňu, ostatné do kalkulátora.
+            const podstranka = service.slug ? najdiSluzbu(service.slug) : undefined;
+
+            return (
             <Reveal as="li" key={service.number} index={i} variant="up">
               <article className="group flex h-full flex-col overflow-hidden rounded-panel border border-line bg-white transition-[transform,box-shadow] duration-[var(--d-short)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]">
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -50,10 +55,10 @@ export default function Services() {
                   </p>
 
                   <a
-                    href="/kalkulator"
+                    href={podstranka ? `/sluzby/${podstranka.slug}` : "/kalkulator"}
                     className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-dark"
                   >
-                    Nezáväzná kalkulácia
+                    {podstranka ? podstranka.odkazText : "Nezáväzná kalkulácia"}
                     <ArrowRight
                       size={16}
                       strokeWidth={2.5}
@@ -64,7 +69,8 @@ export default function Services() {
                 </div>
               </article>
             </Reveal>
-          ))}
+            );
+          })}
         </ul>
       </div>
     </section>

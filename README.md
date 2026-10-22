@@ -23,10 +23,12 @@ app/
   icon.svg        favicon
   opengraph-image.jpg
   kalkulator/    cenový kalkulátor (samostatná routa)
+  sluzby/[sluzba]/  podstránky služieb — viď nižšie
   cookies/ · ochrana-osobnych-udajov/
 components/       jedna sekcia = jeden komponent
 lib/
   content.ts      všetok text a dáta  ← copy sa mení tu, nie v komponentoch
+  sluzby.ts       obsah podstránok služieb (text, rozsah prác, FAQ)
   images.ts       register fotiek (statické importy → rozmery zadarmo)
   kalkulator/     cenník, výpočet, odvodenie výmerov — viď KALKULATOR.md
 public/
@@ -71,6 +73,38 @@ načíta až po kliknutí, písmo self-hostované s dvoma váhami.
 
 ---
 
+## Podstránky služieb
+
+Dovtedy bol web jedna dlhá stránka a Google jej vedel priradiť zhruba jeden
+okruh dopytov. Každá služba má teraz vlastnú URL, `title`, text a FAQ.
+
+Pridanie ďalšej služby = **jeden záznam v `lib/sluzby.ts`** plus doplnenie
+`slug` k príslušnej karte v `services` v `lib/content.ts`. Routa, metadáta,
+drobčeky, schéma, sitemap aj odkazy v pätke sa napoja samy.
+
+### Ako vznikol výber tém
+
+Z našepkávača Google (`hl=sk`, `gl=sk`) — teda z toho, čo ľudia reálne píšu.
+Najsilnejšie okruhy: **cena za m²**, **plechová a falcovaná strecha**,
+**výmena strechy na starom dome**, plech vs. škridla, povolenie, dotácia.
+
+### ⚠️ Prečo nie sú lokalitné podstránky
+
+Dopyt „strechár + obec" sa na Orave prakticky nemeria — `strechár Námestovo`
+ani `strecha Dolný Kubín` nemajú v našepkávači **jediný návrh**, kým
+`strechári Trnava` či `strechár Košice` áno. Šesť stránok po obciach by boli
+tenké stránky s prehádzaným názvom obce, čo Google hodnotí ako duplicitu.
+Obce sú preto pokryté v texte úvodnej stránky a v `areaServed`.
+
+### Čo sa do textov nesmie napísať
+
+Technické fakty o strechách áno. Tvrdenia o firme — roky praxe, počty
+realizácií, záruky, hodnotenia — **len po overení s klientom**. Pri dotáciách
+a povoleniach sa zámerne neuvádzajú konkrétne sumy ani lehoty; menia sa
+a nesprávny údaj je horší než žiadny.
+
+---
+
 ## SEO
 
 - **Celý obsah je v HTML** — 7 000 znakov textu čitateľných bez JavaScriptu.
@@ -105,6 +139,8 @@ načíta až po kliknutí, písmo self-hostované s dvoma váhami.
       a odhadnuté trhové ceny. Nechať klienta prejsť a prepnúť na `"potvrdeny"`.
 - [ ] **Overiť doménu `send.daches.sk` v Resende** + DNS záznamy na Websupporte.
       Bez toho dopyty padajú do spamu (posielajú sa z testovacej adresy Resendu).
+- [ ] **Ďalšie podstránky služieb** — pripravené v pláne: nová strecha na kľúč,
+      klampiarske práce. Radca (cena, dotácia, plech vs. škridla) zatiaľ nie je.
 - [ ] **Premenné prostredia vo Verceli** — `RESEND_API_KEY`, `DOPYT_ODOSIELATEL`,
       `DOPYT_PRIJEMCA`. Názvy sú v `.env.example`.
 

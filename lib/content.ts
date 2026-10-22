@@ -86,9 +86,17 @@ export const trustItems = [
 ] as const;
 
 /* ---------- Služby ---------- */
+/**
+ * Karty služieb na úvodnej stránke.
+ *
+ * `slug` = služba má vlastnú podstránku a karta na ňu odkazuje.
+ * Prázdny `slug` = podstránka zatiaľ neexistuje, karta vedie do kalkulátora.
+ * Po dopísaní ďalšej podstránky stačí doplniť slug sem.
+ */
 export const services = [
   {
     number: "01",
+    slug: "",
     title: "Výstavba krovov",
     description:
       "Výroba a montáž drevených krovov podľa projektu a konkrétnych požiadaviek stavby.",
@@ -97,6 +105,7 @@ export const services = [
   },
   {
     number: "02",
+    slug: "",
     title: "Nové strechy",
     description:
       "Kompletná realizácia strechy pre novostavby vrátane prípravy a montáže jednotlivých prvkov.",
@@ -105,6 +114,7 @@ export const services = [
   },
   {
     number: "03",
+    slug: "vymena-strechy",
     title: "Rekonštrukcie striech",
     description:
       "Obnova starších strešných konštrukcií a riešenie poškodených alebo nevyhovujúcich častí.",
@@ -113,6 +123,7 @@ export const services = [
   },
   {
     number: "04",
+    slug: "",
     title: "Tesárske práce",
     description:
       "Precízne tesárske práce pri novostavbách, rekonštrukciách a ďalších stavebných projektoch.",
@@ -121,6 +132,7 @@ export const services = [
   },
   {
     number: "05",
+    slug: "plechova-strecha",
     title: "Strešné krytiny",
     description:
       "Montáž strešných krytín podľa typu projektu a požiadaviek zákazníka.",
@@ -129,6 +141,7 @@ export const services = [
   },
   {
     number: "06",
+    slug: "",
     title: "Klampiarske práce a opravy",
     description:
       "Odkvapové systémy, oplechovanie a lokálne opravy poškodených častí strechy.",
