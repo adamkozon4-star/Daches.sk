@@ -36,16 +36,24 @@ export const areaServed = [
 
 /* ---------- Navigácia ---------- */
 /**
- * „Domov" tu zámerne nie je — logo v hlavičke robí to isté a na
- * jednostránkovom webe by položka len zaberala miesto.
+ * „Domov" tu zámerne nie je — logo v hlavičke robí to isté.
+ *
+ * ⚠️ Odkazy musia byť `/#kotva`, nie `#kotva`.
+ * Holá kotva sa rozloží voči aktuálnej adrese, takže na podstránke
+ * `/sluzby/plechova-strecha` by z nej vzniklo
+ * `/sluzby/plechova-strecha#sluzby` — cieľ tam neexistuje a odkaz nerobí nič.
+ * S lomkou vedie vždy na úvodnú stránku a `<Link>` v hlavičke sa postará
+ * o to, aby sa na úvodnej iba odscrollovalo bez znovunačítania.
+ *
+ * `submenu` = položka rozbalí podstránky služieb (viď `Header.tsx`).
  */
 export const navLinks = [
-  { label: "Služby", href: "#sluzby" },
-  { label: "Realizácie", href: "#realizacie" },
-  { label: "Priebeh realizácie", href: "#priebeh" },
-  { label: "Prečo Daches", href: "#preco-daches" },
-  { label: "Materiály", href: "#materialy" },
-  { label: "Kontakt", href: "#kontakt" },
+  { label: "Služby", href: "/#sluzby", submenu: true },
+  { label: "Realizácie", href: "/#realizacie", submenu: false },
+  { label: "Priebeh realizácie", href: "/#priebeh", submenu: false },
+  { label: "Prečo Daches", href: "/#preco-daches", submenu: false },
+  { label: "Materiály", href: "/#materialy", submenu: false },
+  { label: "Kontakt", href: "/#kontakt", submenu: false },
 ] as const;
 
 /* ---------- Hero ---------- */

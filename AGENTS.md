@@ -5,13 +5,18 @@ This version has breaking changes — APIs, conventions, and file structure may 
 Známy príklad z tohto projektu: `next.config.ts` musí deklarovať `images.qualities`,
 inak Next 16 odmietne každý `<Image quality={...}>` s HTTP 400.
 
-# Dve pasce, do ktorých sa tu už raz stúpilo
+# Tri pasce, do ktorých sa tu už raz stúpilo
 
 - **Záporný z-index vo vlastnej sekcii.** Obal fotky v hero nesmie mať `-z-10`,
   keď sekcia má vlastné pozadie — vykreslí sa ZA neho a fotka zmizne.
 - **`clip-path` na prvku, ktorý sleduje IntersectionObserver.** Observer vidí
   nulovú plochu a prvok sa nikdy neodhalí. Clip patrí na obsah (`> *`).
   Detaily v `DESIGN_SYSTEM.md`.
+- **Holá kotva v navigácii.** Odkazy v `navLinks` musia byť `/#kotva`, nie
+  `#kotva`. Holá kotva sa rozloží voči aktuálnej adrese, takže na podstránke
+  `/sluzby/plechova-strecha` z nej vznikne `/sluzby/plechova-strecha#sluzby` —
+  cieľ tam neexistuje a **celá horná navigácia na podstránkach prestane
+  fungovať**. Na úvodnej stránke sa chyba neprejaví, preto je ľahké ju prehliadnuť.
 
 # Konvencie projektu
 

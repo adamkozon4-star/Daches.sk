@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Menu, Phone, X } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { company, navLinks } from "@/lib/content";
 import { brandLogo } from "@/lib/images";
+import { sluzby } from "@/lib/sluzby";
 
 /**
  * Hlavička zostáva viditeľná stále — mení len pozadie.
@@ -63,7 +65,7 @@ export default function Header() {
       }`}
     >
       <div className="container-max flex h-[var(--header-h)] items-center justify-between gap-6">
-        <a href="#hero" className="shrink-0" aria-label={`${company.name} — úvod`}>
+        <Link href="/" className="shrink-0" aria-label={`${company.name} — úvod`}>
           <Image
             src={brandLogo}
             alt={company.name}
@@ -73,20 +75,75 @@ export default function Header() {
             sizes="256px"
             className="h-9 w-auto lg:h-10"
           />
-        </a>
+        </Link>
 
         <nav aria-label="Hlavná navigácia" className="hidden lg:block">
           <ul className="flex items-center gap-8">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="text-sm font-medium text-white/70 transition-colors duration-[var(--d-micro)] hover:text-white"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {navLinks.map((link) =>
+              link.submenu ? (
+                /*
+                  Podmenu je v HTML aj keď je zavreté — odkazy na podstránky
+                  tak vedú z každej stránky webu a prečítajú ich aj roboty.
+                  Skrývame ho cez `invisible` (visibility: hidden), nie cez
+                  `display:none`: obsah ostáva v markupe, ale zmizne
+                  z poradia tabulátora, takže sa nedá omylom zaostriť
+                  na zavreté menu.
+
+                  Otvára sa hoverom aj `focus-within`, teda aj klávesnicou.
+                  Žiadny stav, žiadny JavaScript.
+
+                  `pt-3` je zámerné: medzera medzi položkou a panelom musí
+                  byť vyplnená, inak hover po ceste nadol vypadne.
+                */
+                <li key={link.href} className="group relative">
+                  <Link
+                    href={link.href}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-white/70 transition-colors duration-[var(--d-micro)] hover:text-white"
+                  >
+                    {link.label}
+                    <ChevronDown
+                      size={14}
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                      className="transition-transform duration-[var(--d-short)] group-hover:rotate-180 group-focus-within:rotate-180"
+                    />
+                  </Link>
+
+                  <div className="invisible absolute left-1/2 top-full z-10 -translate-x-1/2 pt-4 opacity-0 transition-opacity duration-[var(--d-short)] group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <ul className="min-w-[248px] rounded-panel border border-white/10 bg-dark/95 p-2 shadow-[var(--shadow-panel)] backdrop-blur-xl">
+                      {sluzby.map((s) => (
+                        <li key={s.slug}>
+                          <Link
+                            href={`/sluzby/${s.slug}`}
+                            className="block rounded-card px-3 py-2.5 text-sm font-medium text-white/75 transition-colors duration-[var(--d-micro)] hover:bg-white/8 hover:text-white"
+                          >
+                            {s.navLabel}
+                          </Link>
+                        </li>
+                      ))}
+
+                      <li className="mt-1 border-t border-white/8 pt-1">
+                        <a
+                          href="/kalkulator"
+                          className="block rounded-card px-3 py-2.5 text-sm font-medium text-white/75 transition-colors duration-[var(--d-micro)] hover:bg-white/8 hover:text-white"
+                        >
+                          Cenový kalkulátor
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              ) : (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm font-medium text-white/70 transition-colors duration-[var(--d-micro)] hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ),
+            )}
           </ul>
         </nav>
 
@@ -139,13 +196,34 @@ export default function Header() {
             <ul className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <a
+                  <Link
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-card px-3 py-3 text-base font-medium text-white/80 transition-colors duration-[var(--d-micro)] hover:bg-white/5 hover:text-white"
                   >
                     {link.label}
-                  </a>
+                  </Link>
+
+                  {/*
+                    Na mobile sa podstránky nerozbaľujú — sú rovno vypísané.
+                    Pri dvoch položkách by rozbaľovanie pridalo klik navyše
+                    a skrylo presne to, kvôli čomu sa menu otvára.
+                  */}
+                  {link.submenu ? (
+                    <ul className="mb-1 ml-3 flex flex-col gap-1 border-l border-white/10 pl-3">
+                      {sluzby.map((s) => (
+                        <li key={s.slug}>
+                          <Link
+                            href={`/sluzby/${s.slug}`}
+                            onClick={() => setMenuOpen(false)}
+                            className="block rounded-card px-3 py-2.5 text-sm text-white/60 transition-colors duration-[var(--d-micro)] hover:bg-white/5 hover:text-white"
+                          >
+                            {s.navLabel}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </li>
               ))}
             </ul>
