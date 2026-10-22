@@ -207,6 +207,55 @@ nezávisle od toho, čo je za ním, a fotka nemusí byť stmavená do čierna. T
 lepšie riešenie než zosilniť celé prekrytie: fotka je v hero vizuálny dôkaz práce,
 nemá zmysel ju schovať.
 
+## 6b. Hero podstránok služieb
+
+Rovnaká skladba ako hero úvodnej: fotka na celú plochu, trojvrstvové
+prekrytie, štítok, podčiarknuté nosné slovo. Pôvodne tu bola fotka
+v rámčeku vedľa textu na plochom tmavom páse a vedľa úvodnej to pôsobilo
+ako iný web.
+
+### ⚠️ Vrstvy prekrytia sa NÁSOBIA, nesčítavajú
+
+Zostatková viditeľnosť fotky je `(1-a₁)(1-a₂)(1-a₃)`. Prvý pokus mal
+0,52 / 0,74 / 0,66 a vľavo dole presvitali **4 %** fotky — hero bol čierny
+obdĺžnik. Tri „stredne silné" vrstvy nad sebou fotku zhasnú.
+
+Súčasné hodnoty nechávajú pod textom ~21 % a vpravo v strede ~72 %.
+
+### ⚠️ Štvrtá vrstva existuje len na mobile
+
+Vodorovný gradient tmaví ľavú polovicu, lebo tam na širokej obrazovke sedí
+text. Na mobile text zaberá celú šírku a pod jeho pravým okrajom zostane
+nezatmavená fotka — meranie tam padlo na 2,8:1. Rieši to plošná vrstva
+`md:hidden`, nie zosilnenie vodorovného gradientu: ten by na desktope
+zbytočne zhasol stranu, kde má byť fotka vidieť.
+
+### Meranie
+
+`scripts/_analyza-hero-sluzby.js` — vloží sa do konzoly prehliadača na
+otvorenej podstránke, nespúšťa sa cez `node`. Dva rozdiely oproti meraniu
+hero úvodnej, na ktorých meranie najprv zlyhalo:
+
+1. **Tailwind v4 vracia farby s priehľadnosťou ako `oklab(...)`.** Vytiahnuť
+   z reťazca čísla a brať ich ako RGB dá nezmysel — z bielej na 65 % vyšla
+   takmer čierna a merania hlásili falošné prepady. Farba sa preto nechá
+   vykresliť na 1×1 canvas a prečíta sa výsledný pixel.
+2. **Text v paneli a v štítku má pod sebou pozadie rodiča.** Merať ho priamo
+   proti fotke je nesprávne oboma smermi: tmavý panel kontrast dvíha, svetlý
+   štítok ho znižuje. Pozadia rodičov sa skladajú zhora nadol.
+
+Spusti na **každej** podstránke a v mobilnej aj desktopovej šírke — každá
+stránka má inú fotku a mobil má navyše štvrtú vrstvu.
+
+### Pozor pri testovaní odhaľovania
+
+Overovať reveal animácie programovým `window.scrollTo` v slučke **nefunguje**
+a hlási falošné chyby: stránka má `scroll-behavior: smooth`, takže skok sa
+animuje, a `getBoundingClientRect` aj `opacity` sa čítajú uprostred prechodu.
+Testuj skutočným rolovaním kolieskom a pozeraj sa na screenshoty.
+
+---
+
 ## 7. Čo sa zámerne nepoužilo
 
 - **Animačná knižnica** (framer-motion, GSAP, Lenis) — všetko vyššie sa dá spraviť

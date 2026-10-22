@@ -40,9 +40,16 @@ export type Sluzba = {
   title: string;
   /** `<meta name="description">` — do 160 znakov, inak ho Google oreže. */
   description: string;
-  /** `<h1>` */
-  nadpis: string;
+  /** Štítok nad nadpisom — rovnaký prvok ako v hero úvodnej stránky. */
+  pill: string;
+  /** `<h1>` rozdelený kvôli akcentovému podčiarknutiu jedného slova. */
+  nadpis: { pred: string; zvyraznene: string; za: string };
   lead: string;
+  /**
+   * Tri krátke fakty pod tlačidlami. Musia byť doložené textom stránky —
+   * nie marketingové frázy a nič, čo nie je overené s klientom.
+   */
+  fakty: string[];
   foto: { src: (typeof photos)[keyof typeof photos]; alt: string };
   /** Úvodné odseky pod fotkou. */
   uvod: string[];
@@ -66,8 +73,14 @@ export const sluzby: Sluzba[] = [
     title: "Plechová strecha — montáž a cena na Orave",
     description:
       "Montáž plechovej strechy na Orave — falcovaná, škridlová aj trapézová krytina. Čo montáž zahŕňa, pre ktorý dom sa hodí a ako zistiť orientačnú cenu.",
-    nadpis: "Plechová strecha",
+    pill: "Strešné krytiny · celá Orava",
+    nadpis: { pred: "", zvyraznene: "Plechová", za: " strecha na Orave" },
     lead: "Falcovaná, škridlová aj trapézová krytina. Montujeme ju na novostavby aj pri výmene starej strechy — na celej Orave.",
+    fakty: [
+      "Falcovaná, škridlová aj trapézová",
+      "Pozink aj hliník",
+      "Zvláda aj nízke sklony",
+    ],
     foto: {
       src: photos.stresneKrytiny,
       alt: "Plechová strecha rodinného domu po montáži — realizácia Daches s.r.o. na Orave",
@@ -166,8 +179,14 @@ export const sluzby: Sluzba[] = [
     title: "Výmena strechy na staršom dome",
     description:
       "Výmena strechy na staršom dome na Orave — demontáž pôvodnej krytiny, kontrola krovu, nová skladba a klampiarina. Ako to prebieha, povolenia a cena.",
-    nadpis: "Výmena strechy",
+    pill: "Rekonštrukcie · celá Orava",
+    nadpis: { pred: "", zvyraznene: "Výmena", za: " strechy na staršom dome" },
     lead: "Od demontáže pôvodnej krytiny po hotovú strechu s novou klampiarinou. Na rodinných domoch po celej Orave.",
+    fakty: [
+      "Vrátane demontáže a odvozu",
+      "Kontrola krovu po odkrytí",
+      "Bezplatná obhliadka",
+    ],
     foto: {
       src: procesFoto.povodnaKrytina,
       alt: "Pôvodná poškodená krytina staršieho rodinného domu pred výmenou strechy — Orava",
