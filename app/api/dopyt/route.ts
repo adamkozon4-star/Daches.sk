@@ -1,3 +1,4 @@
+import { ipZiadosti, prilisCasto } from "@/lib/brzda";
 import { company } from "@/lib/content";
 
 /**
@@ -62,6 +63,19 @@ const bezpecne = (v: string) =>
     .replace(/"/g, "&quot;");
 
 export async function POST(request: Request) {
+  /**
+   * Brzda ide ako prvá — pred čítaním tela aj pred validáciou.
+   *
+   * Daches sám o sebe zneužiť ako rozosielač spamu nejde: e-mail chodí
+   * vždy len na pevnú firemnú adresu, nikdy na adresu od návštevníka.
+   * Bot ale vie zahltiť klientovu schránku a vyčerpať denný limit
+   * Resendu, ktorý zdieľa viac našich projektov — presne to sa stalo
+   * cez formulár na jutrstol.sk a prestali fungovať formuláre všetkým.
+   */
+  if (prilisCasto(ipZiadosti(request))) {
+    return Response.json({ ok: false, dovod: "prilis_casto" }, { status: 429 });
+  }
+
   let telo: Telo;
   try {
     telo = (await request.json()) as Telo;
