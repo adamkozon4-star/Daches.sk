@@ -133,15 +133,17 @@ export function Kapitoly({ kapitoly }: { kapitoly: Kapitola[] }) {
                 variant="up"
                 className="parallax-up mt-14 overflow-hidden rounded-panel lg:mt-20"
               >
-                <Image
-                  src={k.foto.src}
-                  alt={k.foto.alt}
-                  loading="lazy"
-                  sizes="(min-width: 1240px) 1240px, 100vw"
-                  quality={80}
-                  style={{ objectPosition: k.foto.pozicia ?? "center" }}
-                  className="aspect-[16/9] w-full object-cover"
-                />
+                <div>
+                  <Image
+                    src={k.foto.src}
+                    alt={k.foto.alt}
+                    loading="lazy"
+                    sizes="(min-width: 1240px) 1240px, 100vw"
+                    quality={80}
+                    style={{ objectPosition: k.foto.pozicia ?? "center" }}
+                    className="aspect-[16/9] w-full object-cover"
+                  />
+                </div>
               </Reveal>
             ) : null}
 

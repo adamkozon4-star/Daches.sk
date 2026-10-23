@@ -20,9 +20,12 @@ inak Next 16 odmietne každý `<Image quality={...}>` s HTTP 400.
 - **`mask` reveal nad fotkou s `loading="lazy"`.** Orezaná fotka má pre
   prehliadač nulovú plochu, takže natívne lazy ju nezačne sťahovať — čaká, kým
   animácia orezanie zruší. Fotka sa potom sťahuje až vo chvíli, keď ju má byť
-  vidieť, a návštevník pozerá na prázdny rámček. `mask` patrí len na fotku,
-  ktorá sa načíta hneď (`priority` / `loading="eager"`); pri lazy fotkách
-  použi `up`. Detaily v `DESIGN_SYSTEM.md`.
+  vidieť, a návštevník pozerá na prázdny rámček. Obal okolo `<img>` to
+  **nerieši** — skúšané a zmerané. Pri lazy fotkách použi `up`; `mask` len
+  tam, kde sa fotka načíta hneď (`priority` / `loading="eager"`).
+  Výnimka: galéria na úvodnej má `mask` aj lazy a meranie ukázalo, že tam
+  načítanie funguje — má hlbšie zanorenie. Nespoliehaj sa na to pri novom
+  kóde. Detaily a čísla v `DESIGN_SYSTEM.md`.
 
 # Konvencie projektu
 

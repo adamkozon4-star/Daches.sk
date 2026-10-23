@@ -112,22 +112,24 @@ export default function RoofProcess() {
                           : ""
                       }`}
                     >
-                      <Image
-                        src={p.photo}
-                        alt={p.alt}
-                        loading="lazy"
-                        sizes={
-                          step.photos.length > 1
-                            ? "(min-width: 1240px) 270px, (min-width: 1024px) calc(25vw - 40px), (min-width: 640px) calc(50vw - 40px), 100vw"
-                            : "(min-width: 1240px) 556px, (min-width: 1024px) calc(50vw - 64px), 100vw"
-                        }
-                        quality={80}
-                        className={`w-full object-cover ${
-                          step.photos.length > 1
-                            ? "aspect-[3/4]"
-                            : "aspect-[4/3]"
-                        }`}
-                      />
+                      <div>
+                        <Image
+                          src={p.photo}
+                          alt={p.alt}
+                          loading="lazy"
+                          sizes={
+                            step.photos.length > 1
+                              ? "(min-width: 1240px) 270px, (min-width: 1024px) calc(25vw - 40px), (min-width: 640px) calc(50vw - 40px), 100vw"
+                              : "(min-width: 1240px) 556px, (min-width: 1024px) calc(50vw - 64px), 100vw"
+                          }
+                          quality={80}
+                          className={`w-full object-cover ${
+                            step.photos.length > 1
+                              ? "aspect-[3/4]"
+                              : "aspect-[4/3]"
+                          }`}
+                        />
+                      </div>
                     </Reveal>
                   ))}
                 </div>

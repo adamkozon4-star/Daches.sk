@@ -129,6 +129,28 @@ Preto majú pásy v kapitolách aj `RoofProcess` variant `up`. Animuje len
 opacitu a posun, plochu nenuluje, takže lazy funguje normálne a fotka je
 pripravená skôr, než na ňu návštevník doscrolluje.
 
+### Obal okolo `<img>` to nerieši — overené
+
+Prvá oprava bola obaliť fotku do `<div>`, aby orezanie padlo naň a nie na
+`<img>`. **Nepomohlo.** Priame porovnanie na tom istom mieste stránky:
+
+| Varianta | Vzdialenosť pod oknom | Stiahnutá |
+|---|---|---|
+| `mask` + obal | 116 px | **nie** |
+| `up` + obal | 136 px | **áno** |
+
+### Prečo galéria na úvodnej funguje
+
+`Gallery.tsx` má `mask` aj `loading="lazy"` a napriek tomu sa fotky sťahujú
+vopred — zmerané naostro: keď je galéria 122 px pod oknom, 6 z 10 fotiek je
+už stiahnutých. Rozdiel je v hĺbke zanorenia: tam je reťaz
+`li[data-reveal="mask"] > button > div > img`, teda medzi orezaným prvkom
+a fotkou sú dve úrovne.
+
+Prečo presne to stačí, sa zo správania prehliadača spoľahlivo odvodiť nedá.
+Preto to nechávame tak, ako je (funguje, zmerané), ale **pri novom kóde sa
+na to nespoliehaj** — pri lazy fotkách použi `up`.
+
 Zachovať `mask` aj pri lazy by sa dalo „oponou" — prekrytím, ktoré sa
 odsunie preč namiesto orezania samotnej fotky. Vyžadovalo by to zladiť farbu
 opony s pozadím sekcie, takže zatiaľ nie je urobené.
