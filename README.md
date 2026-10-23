@@ -82,6 +82,33 @@ Pridanie ďalšej služby = **jeden záznam v `lib/sluzby.ts`** plus doplnenie
 `slug` k príslušnej karte v `services` v `lib/content.ts`. Routa, metadáta,
 drobčeky, schéma, sitemap aj odkazy v pätke sa napoja samy.
 
+### Kapitoly
+
+Stránka je rozdelená na číslované kapitoly s vlastným indexom pod hero.
+Robí to z nej dokument, v ktorom sa dá orientovať — čitateľ vidí dopredu,
+čo ho čaká. Každá kapitola má veľké **tvrdenie** vľavo a podrobnosti vpravo:
+kto stránku preletí očami, prečíta si len tvrdenia a aj tak odíde s odpoveďou.
+
+Kapitola môže niesť bloky štyroch typov (`Blok` v `lib/sluzby.ts`):
+
+| Typ | Na čo |
+|---|---|
+| `karty` | varianty alebo situácie, voliteľne s údajmi parameter → hodnota |
+| `porovnanie` | tabuľka dvoch možností; `poznamka` je **povinná** |
+| `vrstvy` | číslovaný postup alebo skladba strechy |
+| `zoznam` | rozsah prác; prvý taký blok plní `OfferCatalog` v schéme |
+
+Rozsah prác sa do štruktúrovaných dát berie z kapitol, nie z osobitného
+poľa — aby bol v schéme vždy ten istý zoznam, ktorý číta návštevník.
+
+### ⚠️ Technické čísla áno, tvrdenia o firme nie
+
+Hmotnosti krytín, hrúbky plechu a vlastnosti materiálov na stránkach sú
+**bežné hodnoty pre daný typ**, nie údaje konkrétneho výrobku — každá
+tabuľka to musí povedať v poznámke. Roky praxe, počty realizácií, záruky
+a ceny sa sem nepíšu, kým ich klient nepotvrdí. Pri dotáciách a povoleniach
+zámerne žiadne sumy ani lehoty: menia sa a nesprávny údaj je horší než žiadny.
+
 ### Ako vznikol výber tém
 
 Z našepkávača Google (`hl=sk`, `gl=sk`) — teda z toho, čo ľudia reálne píšu.

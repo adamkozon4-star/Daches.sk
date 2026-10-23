@@ -149,8 +149,6 @@
     ['nav[aria-label="Drobčeková navigácia"] li:last-child span', "Drobčeky — aktuálna", 4.5],
     ["p.text-eyebrow", "Štítok nad nadpisom", 4.5],
     ["ul.mt-8 li", "Fakty pod tlačidlami", 4.5],
-    ['nav[aria-label="Obsah stránky"] p', "Panel — popisok", 4.5],
-    ['nav[aria-label="Obsah stránky"] a', "Panel — odkaz", 4.5],
   ];
 
   const merania = ciele.map(([sel, n, p]) => {

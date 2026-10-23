@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, Check, HardHat, Phone } from "lucide-react";
+import { ArrowRight, HardHat, Phone } from "lucide-react";
 import Blueprint from "@/components/Blueprint";
 import Drobceky from "@/components/Drobceky";
 import Faq from "@/components/Faq";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
+import { IndexKapitol, Kapitoly } from "@/components/sluzby/Kapitoly";
 import { areaServed, company } from "@/lib/content";
 import { najdiSluzbu, sluzby } from "@/lib/sluzby";
 
@@ -50,6 +51,15 @@ export default async function Page({ params }: Props) {
     .filter((x) => x !== undefined);
 
   /**
+   * Rozsah prác pre `OfferCatalog` sa berie z kapitol — je to blok typu
+   * `zoznam`. Nech je zoznam služieb v schéme vždy ten istý, ktorý číta
+   * návštevník, a nie druhá kópia udržiavaná osobitne.
+   */
+  const rozsah = s.kapitoly
+    .flatMap((k) => k.bloky)
+    .find((b) => b.typ === "zoznam");
+
+  /**
    * `Service` naviazaný na firmu z `app/layout.tsx` cez `@id` — organizácia
    * sa tým nezdvojuje, len sa na ňu odkáže ako na poskytovateľa.
    */
@@ -62,14 +72,18 @@ export default async function Page({ params }: Props) {
     serviceType: s.navLabel,
     provider: { "@id": `${company.url}/#business` },
     areaServed: areaServed.map((name) => ({ "@type": "City", name })),
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: s.rozsah.nadpis,
-      itemListElement: s.rozsah.polozky.map((nazov) => ({
-        "@type": "Offer",
-        itemOffered: { "@type": "Service", name: nazov },
-      })),
-    },
+    ...(rozsah
+      ? {
+          hasOfferCatalog: {
+            "@type": "OfferCatalog",
+            name: rozsah.nadpis,
+            itemListElement: rozsah.polozky.map((nazov) => ({
+              "@type": "Offer",
+              itemOffered: { "@type": "Service", name: nazov },
+            })),
+          },
+        }
+      : {}),
   };
 
   return (
@@ -169,7 +183,7 @@ export default async function Page({ params }: Props) {
             />
           </div>
 
-          <div className="mt-9 grid items-end gap-12 lg:mt-12 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="mt-9 lg:mt-12">
             <div className="max-w-3xl">
               <p
                 data-reveal="up"
@@ -232,140 +246,13 @@ export default async function Page({ params }: Props) {
               </ul>
             </div>
 
-            {/*
-              Rýchla navigácia po stránke. Vyplní pravú stranu hero rovnako
-              ako pás realizácií na úvodnej a zároveň je k niečomu — stránka
-              je dlhá a cena býva prvé, čo človek hľadá.
-            */}
-            <nav
-              aria-label="Obsah stránky"
-              data-reveal="up"
-              style={{ "--reveal-delay": "520ms" } as React.CSSProperties}
-              className="rounded-panel border border-white/12 bg-[rgba(17,17,17,0.72)] p-5 backdrop-blur-md lg:w-[286px]"
-            >
-              <p className="text-eyebrow uppercase text-white/60">
-                Na tejto stránke
-              </p>
-              <ul className="mt-4 flex flex-col">
-                {[
-                  { href: "#rozsah", label: s.rozsah.nadpis },
-                  { href: "#cena", label: "Koľko to bude stáť" },
-                  { href: "#faq", label: "Časté otázky" },
-                ].map((o) => (
-                  <li key={o.href}>
-                    <a
-                      href={o.href}
-                      className="group flex items-center justify-between gap-3 border-b border-white/8 py-2.5 text-sm text-white/75 transition-colors duration-[var(--d-micro)] last:border-b-0 hover:text-white"
-                    >
-                      {o.label}
-                      <ArrowRight
-                        size={14}
-                        strokeWidth={2.5}
-                        aria-hidden="true"
-                        className="shrink-0 text-white/30 transition-transform duration-[var(--d-short)] group-hover:translate-x-0.5 group-hover:text-accent"
-                      />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
           </div>
         </div>
       </section>
 
-      {/* ---------- Úvodný text + karty ---------- */}
-      <section aria-labelledby="prehlad" className="section-y bg-white">
-        <div className="container-max">
-          <Reveal className="max-w-[62ch]">
-            <h2 id="prehlad" className="sr-only">
-              {s.navLabel} — prehľad
-            </h2>
-            {s.uvod.map((odsek) => (
-              <p key={odsek} className="text-lead mb-5 text-dark/80 last:mb-0">
-                {odsek}
-              </p>
-            ))}
-          </Reveal>
+      <IndexKapitol kapitoly={s.kapitoly} />
 
-          <h3 className="text-h3 mt-16 text-dark">{s.karty.nadpis}</h3>
-          <ul className="mt-6 grid gap-5 sm:grid-cols-2">
-            {s.karty.polozky.map((k, i) => (
-              <Reveal as="li" key={k.nazov} index={i} variant="up">
-                <article className="h-full rounded-panel border border-line bg-white p-6 transition-[transform,box-shadow] duration-[var(--d-short)] hover:-translate-y-1 hover:shadow-[var(--shadow-lift)]">
-                  <h4 className="text-h3 text-dark">{k.nazov}</h4>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">{k.text}</p>
-                </article>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ---------- Rozsah prác ---------- */}
-      <section aria-labelledby="rozsah" className="section-y bg-light">
-        <div className="container-max">
-          <SectionHeading
-            id="rozsah"
-            eyebrow="Rozsah prác"
-            before={s.rozsah.nadpis}
-            lead={s.rozsah.lead}
-          />
-
-          <ul className="mt-12 grid gap-x-10 gap-y-4 md:grid-cols-2 lg:mt-16">
-            {s.rozsah.polozky.map((p, i) => (
-              <Reveal
-                as="li"
-                key={p}
-                index={i}
-                step={60}
-                className="flex items-start gap-3 border-b border-line pb-4"
-              >
-                <Check
-                  size={18}
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                  className="mt-0.5 shrink-0 text-dark"
-                />
-                <span className="text-[15px] leading-relaxed text-dark/80">{p}</span>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* ---------- Voľné bloky ---------- */}
-      {s.bloky.length ? (
-        <section aria-label="Doplňujúce informácie" className="section-y bg-white">
-          <div className="container-max">
-            <div className="grid gap-10 md:grid-cols-2 lg:gap-x-16 lg:gap-y-14">
-              {s.bloky.map((b, i) => (
-                <Reveal key={b.nadpis} index={i} className="max-w-[56ch]">
-                  <h2 className="text-h3 text-dark">{b.nadpis}</h2>
-                  {b.odseky.map((o) => (
-                    <p
-                      key={o}
-                      className="mt-3 text-[15px] leading-relaxed text-muted"
-                    >
-                      {o}
-                    </p>
-                  ))}
-
-                  {/* Odkaz na zdokumentovanú zákazku patrí k bloku o priebehu. */}
-                  {b.nadpis === "Ako to vyzerá v praxi" ? (
-                    <Link
-                      href="/#priebeh"
-                      className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-dark"
-                    >
-                      Pozrieť priebeh realizácie na fotkách
-                      <ArrowRight size={15} strokeWidth={2.5} aria-hidden="true" />
-                    </Link>
-                  ) : null}
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
+      <Kapitoly kapitoly={s.kapitoly} />
 
       {/* ---------- Cena ---------- */}
       <section aria-labelledby="cena" className="section-y bg-dark">
