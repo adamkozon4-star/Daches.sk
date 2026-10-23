@@ -74,7 +74,7 @@
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
 
   // ⚠️ Tieto tri vrstvy musia sedieť s komponentom.
-  ctx.fillStyle = "rgba(17,17,17,0.26)";
+  ctx.fillStyle = "rgba(17,17,17,0.32)";
   ctx.fillRect(0, 0, cv.width, cv.height);
 
   let g = ctx.createLinearGradient(0, 0, cv.width, 0);

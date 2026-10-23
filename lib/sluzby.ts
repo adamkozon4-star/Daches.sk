@@ -402,8 +402,9 @@ export const sluzby: Sluzba[] = [
       "Bezplatná obhliadka",
     ],
     foto: {
-      src: procesFoto.povodnaKrytina,
-      alt: "Pôvodná poškodená krytina staršieho rodinného domu pred výmenou strechy — Orava",
+      src: procesFoto.noveDebnenie,
+      alt: "Odkrytá strecha staršieho domu s novým debnením počas výmeny — realizácia Daches s.r.o. na Orave",
+      pozicia: "center 58%",
     },
 
     kapitoly: [
@@ -417,8 +418,11 @@ export const sluzby: Sluzba[] = [
           "Výmena strechy preto nie je len o novej krytine. Keď je konštrukcia odkrytá, je to jediná chvíľa, kedy sa dá skontrolovať krov, doplniť chýbajúca poistná hydroizolácia a vyriešiť detaily, ku ktorým sa potom roky nikto nedostane.",
         ],
         foto: {
-          src: photos.rekonstrukciaStrechy,
-          alt: "Rekonštrukcia strešnej konštrukcie staršieho domu, Orava — Daches s.r.o.",
+          // Výrez hore: dole je len plochá tieňom prekrytá krytina bez detailu,
+          // zaujímavý je hrebeň, staré komíny a obec za nimi.
+          src: procesFoto.povodnaKrytina,
+          alt: "Pôvodná doslúžená krytina staršieho domu pred výmenou — Orava",
+          pozicia: "center 24%",
         },
         bloky: [
           {
@@ -521,8 +525,8 @@ export const sluzby: Sluzba[] = [
           "Takýto rozsah sa nedá spoľahlivo odhadnúť cez fotku ani zo zeme. Preto ho vždy odsúhlasujeme s majiteľom skôr, než sa doň pustíme — aj s tým, čo to znamená pre cenu a termín.",
         ],
         foto: {
-          src: procesFoto.noveDebnenie,
-          alt: "Nové debnenie položené na skontrolovanom krove počas výmeny strechy, Orava",
+          src: procesFoto.povodneKominy,
+          alt: "Pôvodné komíny odhalené po sňatí krytiny — typický nález pri výmene strechy, Orava",
         },
         bloky: [
           {

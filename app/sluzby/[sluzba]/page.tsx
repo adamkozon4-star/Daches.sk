@@ -132,12 +132,13 @@ export default async function Page({ params }: Props) {
             je (1-a₁)(1-a₂)(1-a₃), takže tri „stredne silné" vrstvy nad sebou
             fotku zhasnú.
 
-            Súčasné hodnoty: pod textom vľavo dole ostáva ~21 % fotky,
-            vpravo v strede ~72 %. Kontrast bieleho textu je nad 9:1 aj pri
+            Súčasné hodnoty: pod textom vľavo dole ostáva ~19 % fotky,
+            vpravo v strede ~66 %. Základ sa dvíhal z 0,26 kvôli svetlému
+            drevu na fotke výmeny strechy — podnadpis tam padal na 4,27:1. Kontrast bieleho textu je nad 9:1 aj pri
             úplne bielom mieste fotky — zmerané, nie odhadnuté.
             Pri zmene hodnôt meranie zopakuj.
           */}
-          <div className="absolute inset-0 bg-[rgba(17,17,17,0.26)]" />
+          <div className="absolute inset-0 bg-[rgba(17,17,17,0.32)]" />
           <div
             className="absolute inset-0"
             style={{
