@@ -230,6 +230,32 @@ nezatmavená fotka — meranie tam padlo na 2,8:1. Rieši to plošná vrstva
 `md:hidden`, nie zosilnenie vodorovného gradientu: ten by na desktope
 zbytočne zhasol stranu, kde má byť fotka vidieť.
 
+### ⚠️ Do širokouhlých pásov patria len fotky na šírku
+
+Hero aj pásy v kapitolách sú širokouhlé a `object-cover` z fotky na výšku
+vyreže úzky vodorovný pruh zo stredu. `stresne-krytiny.jpg` (1536 × 2048)
+bola pôvodne hero fotkou podstránky a zostal z nej detail falcov — nie
+strecha. Fotky na výšku patria do galérie a do mriežok.
+
+### Výrez sa ladí cez `pozicia`, nie cez silnejšie prekrytie
+
+`Obrazok` v `lib/sluzby.ts` má voliteľné `pozicia` (`object-position`).
+Keď biely text padol nad svetlou oblohou na **2,9:1**, správne riešenie
+nebolo stmaviť celú fotku, ale posunúť výrez nižšie — nad tmavú strechu.
+Po posune `center 74 %` vyšiel nadpis na **4,47:1** a fotka zostala svetlá.
+
+Meranie musí `object-position` poznať, inak počíta inú časť fotky.
+
+### Rozlíšenie podkladov je strop
+
+Fotky realizácií majú 1536 – 2048 px na šírku; sú to už zmenšené kópie.
+V `next.config.ts` sú v `deviceSizes` doplnené **1536 a 1600** — bez nich
+je medzi 1200 a 1920 diera a prehliadač si bral 1200 px a roztiahol ju
+na 1539 px (1,28×). Teraz berie natívnu šírku (0,94×).
+
+Vyššiu ostrosť už nastavením nedosiahneme. Jediná cesta je dostať od
+klienta originály z telefónu (bežne 4000 px a viac).
+
 ### Meranie
 
 `scripts/_analyza-hero-sluzby.js` — vloží sa do konzoly prehliadača na

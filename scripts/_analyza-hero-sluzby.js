@@ -42,20 +42,34 @@
   cv.height = Math.round(R.height);
   const ctx = cv.getContext("2d");
 
-  // object-cover: zachovaj pomer, orež dlhšiu stranu, vycentruj
+  // object-cover + object-position: zachovaj pomer, orež dlhšiu stranu
+  // a posuň výrez podľa object-position. Predvolený stred (50 %) nestačí —
+  // hero má výrez posunutý nižšie a meranie stredu by hlásilo inú časť fotky.
+  const op = getComputedStyle(img).objectPosition.split(" ");
+  const podiel = (v, i) => {
+    const t = v ?? (i === 0 ? "50%" : "50%");
+    if (t === "center") return 0.5;
+    if (t === "left" || t === "top") return 0;
+    if (t === "right" || t === "bottom") return 1;
+    const c = parseFloat(t);
+    return Number.isFinite(c) ? c / 100 : 0.5;
+  };
+  const px = podiel(op[0], 0);
+  const py = podiel(op[1], 1);
+
   const pB = R.width / R.height;
   const pI = img.naturalWidth / img.naturalHeight;
   let sw, sh, sx, sy;
   if (pI > pB) {
     sh = img.naturalHeight;
     sw = sh * pB;
-    sx = (img.naturalWidth - sw) / 2;
+    sx = (img.naturalWidth - sw) * px;
     sy = 0;
   } else {
     sw = img.naturalWidth;
     sh = sw / pB;
     sx = 0;
-    sy = (img.naturalHeight - sh) / 2;
+    sy = (img.naturalHeight - sh) * py;
   }
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cv.width, cv.height);
 

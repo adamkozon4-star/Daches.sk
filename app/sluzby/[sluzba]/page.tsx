@@ -103,7 +103,7 @@ export default async function Page({ params }: Props) {
       */}
       <section
         aria-label={s.navLabel}
-        className="relative flex min-h-[74svh] items-end overflow-hidden bg-dark pt-[var(--header-h)] lg:min-h-[80svh]"
+        className="relative flex min-h-[64svh] items-end overflow-hidden bg-dark pt-[var(--header-h)] lg:min-h-[70svh]"
       >
         <div className="absolute inset-0">
           {/*
@@ -118,8 +118,9 @@ export default async function Page({ params }: Props) {
               priority
               fetchPriority="high"
               sizes="100vw"
-              quality={80}
-              className="object-cover object-center"
+              quality={85}
+              style={{ objectPosition: s.foto.pozicia ?? "center" }}
+              className="object-cover"
             />
           </div>
 
@@ -196,7 +197,7 @@ export default async function Page({ params }: Props) {
               <h1
                 data-reveal="up"
                 style={{ "--reveal-delay": "100ms" } as React.CSSProperties}
-                className="text-hero mt-7 text-balance text-white"
+                className="text-hero mt-7 text-balance leading-[1.07] text-white"
               >
                 {s.nadpis.pred}
                 <span className="mark">{s.nadpis.zvyraznene}</span>
@@ -206,7 +207,7 @@ export default async function Page({ params }: Props) {
               <p
                 data-reveal="up"
                 style={{ "--reveal-delay": "220ms" } as React.CSSProperties}
-                className="text-lead mt-7 max-w-[54ch] text-white/88"
+                className="text-lead mt-7 max-w-[54ch] text-white/95"
               >
                 {s.lead}
               </p>

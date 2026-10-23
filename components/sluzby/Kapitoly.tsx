@@ -121,7 +121,8 @@ export function Kapitoly({ kapitoly }: { kapitoly: Kapitola[] }) {
                   loading="lazy"
                   sizes="(min-width: 1240px) 1240px, 100vw"
                   quality={80}
-                  className="aspect-[21/9] w-full object-cover"
+                  style={{ objectPosition: k.foto.pozicia ?? "center" }}
+                  className="aspect-[16/9] w-full object-cover"
                 />
               </Reveal>
             ) : null}

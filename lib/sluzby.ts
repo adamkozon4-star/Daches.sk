@@ -35,7 +35,27 @@ import { photos, procesFoto } from "@/lib/images";
 
 export type FaqPolozka = { otazka: string; odpoved: string };
 
-type Obrazok = { src: StaticImageData; alt: string };
+/**
+ * ⚠️ Do hero a do pásov v kapitolách patria IBA fotky na šírku.
+ *
+ * Oba pásy sú širokouhlé a `object-cover` z fotky na výšku vyreže úzky
+ * vodorovný pruh zo stredu. Presne to sa stalo s `stresne-krytiny.jpg`
+ * (1536 × 2048): v hero z nej zostal detail falcov, nie strecha.
+ * Fotky na výšku patria do galérie a do mriežok, nie sem.
+ */
+type Obrazok = {
+  src: StaticImageData;
+  alt: string;
+  /**
+   * Výrez cez `object-position`. Pás je širokouhlý, takže z fotky vidno len
+   * vodorovný pruh — a predvolený stred nebýva ten správny.
+   *
+   * V hero má navyše vplyv na čitateľnosť: biely text nad svetlou oblohou
+   * prepadol na 2,9:1. Posunutie výrezu nižšie, nad tmavú strechu, je
+   * lepšie riešenie než stmaviť celú fotku prekrytím.
+   */
+  pozicia?: string;
+};
 
 /**
  * Obsahové bloky kapitoly. Rozlíšené podľa `typ`, aby komponent nemusel
@@ -122,8 +142,9 @@ export const sluzby: Sluzba[] = [
       "Zvláda aj nízke sklony",
     ],
     foto: {
-      src: photos.stresneKrytiny,
-      alt: "Plechová strecha rodinného domu po montáži — realizácia Daches s.r.o. na Orave",
+      src: procesFoto.hotovaStrecha,
+      alt: "Dokončená falcovaná plechová strecha v antracitovej farbe s výhľadom na oravskú krajinu — realizácia Daches s.r.o.",
+      pozicia: "center 74%",
     },
 
     kapitoly: [
@@ -139,8 +160,8 @@ export const sluzby: Sluzba[] = [
           "Obava z hluku pri daždi je najčastejšia a pri obytnom dome neopodstatnená. Hluk vzniká tam, kde je plech napnutý nad vzduchovou medzerou bez podkladu — na prístreškoch a hospodárskych budovách. Pod krytinou obytného domu je debnenie alebo latovanie, separačná vrstva a v podkroví izolácia.",
         ],
         foto: {
-          src: procesFoto.hotovaStrecha,
-          alt: "Dokončená falcovaná plechová strecha v antracitovej farbe, rodinný dom na Orave",
+          src: photos.konstrukciaKrovu,
+          alt: "Drevený krov zvnútra — konštrukcia, ktorá nesie hmotnosť krytiny, realizácia na Orave",
         },
         bloky: [
           {
@@ -434,8 +455,8 @@ export const sluzby: Sluzba[] = [
           "Jednu takúto zákazku máme zdokumentovanú krok po kroku: od starej červenej krytiny cez odkrytú konštrukciu, nové debnenie a hydroizoláciu až po hotovú antracitovú strechu s novým oplechovaním komínov.",
         ],
         foto: {
-          src: procesFoto.odkrytaKonstrukcia,
-          alt: "Odkrytá strešná konštrukcia počas výmeny strechy na rodinnom dome, Orava",
+          src: procesFoto.dokoncovanieHrebena,
+          alt: "Dokončovanie hrebeňa počas výmeny strechy na rodinnom dome, Orava",
         },
         bloky: [
           {

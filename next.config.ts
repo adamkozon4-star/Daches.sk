@@ -15,6 +15,16 @@ const nextConfig: NextConfig = {
   images: {
     // Moderné formáty pre LCP — AVIF s WebP fallbackom.
     formats: ["image/avif", "image/webp"],
+    /**
+     * 1536 a 1600 nie sú v predvolených šírkach Nextu — medzi 1200 a 1920
+     * je diera. Fotky realizácií majú 1536 alebo 1600 px na šírku, takže
+     * prehliadač si z predvoleného srcsetu vybral 1200 a roztiahol ju na
+     * 1539 px. Teraz má k dispozícii natívnu šírku a nič sa neroztahuje.
+     *
+     * Väčšie šírky než zdroj Next nedogeneruje — 1920 a vyššie zostávajú
+     * pre prípad, že pribudnú ostrejšie podklady.
+     */
+    deviceSizes: [640, 750, 828, 1080, 1200, 1536, 1600, 1920, 2048, 3840],
     // Next 16 vyžaduje povolené hodnoty vopred.
     // 70 = miniatúry, 80 = obsahové fotky, 85 = lightbox.
     qualities: [70, 80, 85],
