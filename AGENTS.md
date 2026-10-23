@@ -5,7 +5,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 Známy príklad z tohto projektu: `next.config.ts` musí deklarovať `images.qualities`,
 inak Next 16 odmietne každý `<Image quality={...}>` s HTTP 400.
 
-# Tri pasce, do ktorých sa tu už raz stúpilo
+# Štyri pasce, do ktorých sa tu už raz stúpilo
 
 - **Záporný z-index vo vlastnej sekcii.** Obal fotky v hero nesmie mať `-z-10`,
   keď sekcia má vlastné pozadie — vykreslí sa ZA neho a fotka zmizne.
@@ -17,6 +17,12 @@ inak Next 16 odmietne každý `<Image quality={...}>` s HTTP 400.
   `/sluzby/plechova-strecha` z nej vznikne `/sluzby/plechova-strecha#sluzby` —
   cieľ tam neexistuje a **celá horná navigácia na podstránkach prestane
   fungovať**. Na úvodnej stránke sa chyba neprejaví, preto je ľahké ju prehliadnuť.
+- **`mask` reveal nad fotkou s `loading="lazy"`.** Orezaná fotka má pre
+  prehliadač nulovú plochu, takže natívne lazy ju nezačne sťahovať — čaká, kým
+  animácia orezanie zruší. Fotka sa potom sťahuje až vo chvíli, keď ju má byť
+  vidieť, a návštevník pozerá na prázdny rámček. `mask` patrí len na fotku,
+  ktorá sa načíta hneď (`priority` / `loading="eager"`); pri lazy fotkách
+  použi `up`. Detaily v `DESIGN_SYSTEM.md`.
 
 # Konvencie projektu
 

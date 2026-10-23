@@ -38,7 +38,7 @@ export default function RoofProcess() {
           {[roofProcess.before, roofProcess.after].map((item, i) => (
             <Reveal
               key={item.label}
-              variant="mask"
+              variant="up"
               index={i}
               step={140}
               className="relative overflow-hidden rounded-panel"
@@ -103,7 +103,7 @@ export default function RoofProcess() {
                   {step.photos.map((p, pi) => (
                     <Reveal
                       key={p.alt}
-                      variant="mask"
+                      variant="up"
                       index={pi}
                       step={140}
                       className={`overflow-hidden rounded-panel ${

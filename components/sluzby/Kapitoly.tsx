@@ -110,9 +110,27 @@ export function Kapitoly({ kapitoly }: { kapitoly: Kapitola[] }) {
               </Reveal>
             </div>
 
+              {/*
+                ⚠️ Zámerne `up`, nie `mask`.
+
+                `mask` orezáva fotku cez `clip-path: inset(0 0 100% 0)`, kým
+                sa neodhalí. Orezaná fotka má pre prehliadač nulovú plochu,
+                takže natívne `loading="lazy"` ju nezačne sťahovať — čaká,
+                kým animácia orezanie zruší. Fotka sa potom začne sťahovať
+                až v okamihu, keď ju má byť vidieť, a návštevník pozerá na
+                prázdny rámček.
+
+                Zmerané naostro: fotky kapitol sa pri scrollovaní cez celú
+                stránku nestiahli vôbec; po zrušení orezania sa načítali
+                okamžite. `up` animuje len opacitu a posun, plochu nenuluje,
+                takže lazy funguje normálne a fotka je pripravená vopred.
+
+                `mask` sa smie použiť iba na fotke, ktorá sa načíta hneď
+                (`priority` alebo `loading="eager"`).
+              */}
             {k.foto ? (
               <Reveal
-                variant="mask"
+                variant="up"
                 className="parallax-up mt-14 overflow-hidden rounded-panel lg:mt-20"
               >
                 <Image

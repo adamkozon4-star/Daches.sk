@@ -83,6 +83,10 @@ všetko s atribútom `data-reveal`. Vďaka tomu je `components/Reveal.tsx`
 
 Varianty: `up` (default), `left`, `right`, `scale`, `mask`.
 
+⚠️ **`mask` sa smie použiť len na fotke, ktorá sa načíta hneď** (`priority`
+alebo `loading="eager"`). Pri `loading="lazy"` sa fotka nestiahne včas —
+viď nižšie. Pri lazy fotkách použi `up`.
+
 `mask` odkrýva fotku zdola nahor cez `clip-path` a súčasne ju dosadí zo
 `scale(1.06)` — to je rozdiel medzi profesionálnym prevedením a obyčajným
 `fade-in`.
@@ -106,6 +110,28 @@ schoval pred vlastným observerom a celá galéria zostala prázdna. Varianty
 `up`/`scale`/`left` fungovali, lebo `opacity` ani `transform` prienik nenulujú.
 
 **Toto sa nesmie zlúčiť späť do jedného selektora.**
+
+### ⚠️ `mask` + `loading="lazy"` = fotka sa načíta až keď ju má byť vidieť
+
+Orezanie nezastaví len vlastný observer. Zastaví aj **natívne lazy loading
+prehliadača**: orezaná fotka má nulovú plochu, prehliadač ju nepovažuje za
+blížiacu sa k oknu a sťahovanie odloží. Spustí sa až vtedy, keď reveal
+orezanie zruší — teda presne vo chvíli, keď ju už má byť vidieť.
+
+Zmerané naostro na `/sluzby/plechova-strecha`:
+
+| | pred | po |
+|---|---|---|
+| Fotky kapitol po prejdení celej stránky | **nestiahla sa ani jedna** | všetky ✓ |
+| Fotka 888 px pod oknom | nestiahnutá | **už stiahnutá** ✓ |
+
+Preto majú pásy v kapitolách aj `RoofProcess` variant `up`. Animuje len
+opacitu a posun, plochu nenuluje, takže lazy funguje normálne a fotka je
+pripravená skôr, než na ňu návštevník doscrolluje.
+
+Zachovať `mask` aj pri lazy by sa dalo „oponou" — prekrytím, ktoré sa
+odsunie preč namiesto orezania samotnej fotky. Vyžadovalo by to zladiť farbu
+opony s pozadím sekcie, takže zatiaľ nie je urobené.
 
 ### ⚠️ Špecificita — najdôležitejšia poznámka v tomto dokumente
 
@@ -151,8 +177,8 @@ Amplitúda parallaxu je max **±4 %**. Viac vyzerá lacno.
 | Prvok | Efekt |
 |---|---|
 | Hero | stagger 100–560 ms, miniatúry naposledy |
-| Fotky | `mask` reveal + dosadnutie mierky |
-| Priebeh realizácie | predtým/potom + striedavá os, `mask` reveal, parallax |
+| Fotky (lazy) | `up` reveal — `mask` by odložil ich stiahnutie |
+| Priebeh realizácie | predtým/potom + striedavá os, `up` reveal, parallax |
 | Proces 01–05 | **spojnica sa vypĺňa podľa scrollu** — jediný takto výrazný efekt |
 | Blueprint | čiary sa samy nakreslia (`stroke-dashoffset`) |
 | Galéria | View Transitions pri filtrovaní |
