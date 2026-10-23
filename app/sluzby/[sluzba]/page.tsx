@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowRight, HardHat, Phone } from "lucide-react";
+import { ArrowRight, Check, HardHat, Phone } from "lucide-react";
 import Blueprint from "@/components/Blueprint";
 import Drobceky from "@/components/Drobceky";
+import DopytForm from "@/components/sluzby/DopytForm";
 import Faq from "@/components/Faq";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
@@ -280,6 +281,13 @@ export default async function Page({ params }: Props) {
                   Spustiť kalkulátor
                   <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
                 </a>
+                {/* Druhá cesta pre toho, kto si cenu rátať nechce. */}
+                <a
+                  href="#dopyt"
+                  className="btn w-full justify-center border border-white/22 text-white hover:bg-white/10 sm:w-auto"
+                >
+                  Radšej mi napíšte
+                </a>
                 <p className="max-w-[34ch] text-sm leading-relaxed text-white/45 lg:text-right">
                   Záväznú cenu povieme po bezplatnej obhliadke — tú zadarmo
                   nenahradí žiadny výpočet.
@@ -287,6 +295,64 @@ export default async function Page({ params }: Props) {
               </div>
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      {/* ---------- Dopyt ---------- */}
+      {/*
+        Dopyt pred FAQ zámerne.
+
+        Kto doskroloval cez celú kapitolu o cene, už je rozhodnutý sa
+        ozvať — v tej chvíli má mať kam. FAQ je pre toho, kto ešte váha,
+        a tomu formulár nikam neutečie: pod otázkami je ďalšie CTA.
+      */}
+      <section
+        id="dopyt"
+        aria-labelledby="dopyt-nadpis"
+        className="section-y bg-light"
+      >
+        <div className="container-max">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-16">
+            <Reveal>
+              <p className="eyebrow text-eyebrow uppercase text-muted">
+                Nezáväzný dopyt
+              </p>
+              <h2
+                id="dopyt-nadpis"
+                className="text-h2 mt-5 text-balance text-dark"
+              >
+                Napíšte nám a <span className="mark">ozveme sa</span> vám
+              </h2>
+              <p className="text-lead mt-5 max-w-[46ch] text-muted">
+                Stačí meno, telefón a e-mail. Zvyšok si povieme — a ak to
+                z opisu nepôjde posúdiť, prídeme sa pozrieť.
+              </p>
+
+              <ul className="mt-8 flex flex-col gap-3">
+                {[
+                  "Obhliadka je bezplatná a nezáväzná",
+                  "Odpovedáme aj na fotky poslané e-mailom",
+                  "Cenu hovoríme až po posúdení stavby",
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-3">
+                    <Check
+                      size={17}
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                      className="mt-0.5 shrink-0 text-dark"
+                    />
+                    <span className="text-[15px] leading-relaxed text-dark/80">
+                      {f}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <DopytForm sluzba={s.navLabel} />
+            </Reveal>
+          </div>
         </div>
       </section>
 

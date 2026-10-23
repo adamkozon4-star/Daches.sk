@@ -115,6 +115,19 @@ Z našepkávača Google (`hl=sk`, `gl=sk`) — teda z toho, čo ľudia reálne p
 Najsilnejšie okruhy: **cena za m²**, **plechová a falcovaná strecha**,
 **výmena strechy na starom dome**, plech vs. škridla, povolenie, dotácia.
 
+### Dopytový formulár
+
+Každá podstránka má pred FAQ sekciu `#dopyt` s krátkym formulárom
+(`components/sluzby/DopytForm.tsx`). Povinné sú tri polia — meno, telefón,
+e-mail. Každé ďalšie znižuje počet odoslaných dopytov a zvyšok sa dá
+dohodnúť po telefóne.
+
+Dopyt ide do tej istej schránky ako dopyt z kalkulátora. Odosielanie je
+spoločné v `lib/dopyt.ts` vrátane náhradnej cesty cez `mailto:`, keby
+server zlyhal — tá je príliš dôležitá na to, aby existovala v dvoch kópiách.
+Kalkulátor cez ňu posiela tiež (`lib/kalkulator/odoslanie.ts` len zostaví
+súhrn a odovzdá ho ďalej).
+
 ### ⚠️ Prečo nie sú lokalitné podstránky
 
 Dopyt „strechár + obec" sa na Orave prakticky nemeria — `strechár Námestovo`

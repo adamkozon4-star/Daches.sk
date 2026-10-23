@@ -1,4 +1,3 @@
-import { company } from "@/lib/content";
 import { DPH } from "@/lib/kalkulator/cennik";
 import {
   krytiny,
@@ -8,7 +7,10 @@ import {
   typyStrechy,
 } from "@/lib/kalkulator/moznosti";
 import { cislo, rozsahEur } from "@/lib/kalkulator/vypocet";
+import { posliDopyt, type VysledokOdoslania } from "@/lib/dopyt";
 import type { Vstup, Vysledok } from "@/lib/kalkulator/typy";
+
+export type { VysledokOdoslania };
 
 export type Kontakt = {
   meno: string;
@@ -20,65 +22,29 @@ export type Kontakt = {
   web?: string;
 };
 
-export type VysledokOdoslania = {
-  ok: boolean;
-  /**
-   * `server`  — dopyt odišiel e-mailom firme, zákazník nemusí robiť nič
-   * `email`   — server zlyhal, otvorili sme zákazníkovi e-mailový program
-   */
-  sposob: "server" | "email";
-};
-
 /**
- * Odoslanie dopytu.
+ * Dopyt z kalkulátora.
  *
- * Primárne ide na `/api/dopyt`, ktorý pošle e-mail cez Resend. Ak by to
- * z akéhokoľvek dôvodu zlyhalo (výpadok Resendu, chýbajúci API kľúč,
- * offline zákazník), spadne to na `mailto:` — dopyt sa teda nikdy
- * nestratí, len prejde inou cestou.
+ * Zostaví čitateľný súhrn zo zadania a odovzdá ho spoločnému odosielaniu
+ * v `lib/dopyt.ts` — vrátane náhradnej cesty cez `mailto:`, keby server
+ * zlyhal.
  */
 export async function odosliDopyt(
   vstup: Vstup,
   vysledok: Vysledok | null,
   kontakt: Kontakt,
 ): Promise<VysledokOdoslania> {
-  const suhrn = zostavSuhrn(vstup, vysledok, kontakt);
-
-  try {
-    const odpoved = await fetch("/api/dopyt", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        meno: kontakt.meno,
-        telefon: kontakt.telefon,
-        email: kontakt.email,
-        adresa: kontakt.adresa,
-        poznamka: kontakt.poznamka,
-        web: kontakt.web ?? "",
-        typProjektu: nazovProjektu(vstup),
-        cena: vysledok ? `${rozsahEur(vysledok.spolu)} bez DPH` : "",
-        suhrn,
-      }),
-    });
-
-    if (odpoved.ok) {
-      const data = (await odpoved.json()) as { ok?: boolean };
-      if (data.ok) return { ok: true, sposob: "server" };
-    }
-  } catch {
-    // Ticho — nižšie je náhradná cesta.
-  }
-
-  otvorEmailovyProgram(suhrn, vstup);
-  return { ok: true, sposob: "email" };
-}
-
-function otvorEmailovyProgram(suhrn: string, vstup: Vstup) {
-  const predmet = `Dopyt z kalkulátora — ${nazovProjektu(vstup)}`;
-  window.location.href =
-    `mailto:${company.email}` +
-    `?subject=${encodeURIComponent(predmet)}` +
-    `&body=${encodeURIComponent(suhrn)}`;
+  return posliDopyt({
+    meno: kontakt.meno,
+    telefon: kontakt.telefon,
+    email: kontakt.email,
+    adresa: kontakt.adresa,
+    poznamka: kontakt.poznamka,
+    web: kontakt.web,
+    typProjektu: nazovProjektu(vstup),
+    cena: vysledok ? `${rozsahEur(vysledok.spolu)} bez DPH` : "",
+    suhrn: zostavSuhrn(vstup, vysledok, kontakt),
+  });
 }
 
 const nazovProjektu = (v: Vstup) =>
