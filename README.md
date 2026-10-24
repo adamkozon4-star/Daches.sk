@@ -195,7 +195,9 @@ a nesprávny údaj je horší než žiadny.
       Bez toho dopyty padajú do spamu (posielajú sa z testovacej adresy Resendu).
 - [x] **Podstránky všetkých šiestich služieb.** Opravy (tesárske, klampiarske)
       majú `bezKalkulatora` — namiesto kalkulátora vedú na dopyt.
-- [ ] Radca (cena, dotácia, plech vs. škridla) zatiaľ nie je.
+- [x] **Radca** (`/radca`, `lib/radca/`) — päť článkov: cena strechy, plech
+      alebo škridla, povolenie, zatekanie, dotácia. Článok o dotácii má rok
+      v titulku a treba ho každý rok prejsť (komentár v súbore).
 - [ ] **Premenné prostredia vo Verceli** — `RESEND_API_KEY`, `DOPYT_ODOSIELATEL`,
       `DOPYT_PRIJEMCA`. Názvy sú v `.env.example`.
 

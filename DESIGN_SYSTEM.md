@@ -279,13 +279,19 @@ aj podnadpis pod prah (najhoršie 2,6:1). Výrezom sa to vyriešiť nedalo —
 obloha je na všetkých. Pri pridaní služby zmeraj jej hero pri šírkach
 375, 768, 1024, 1440 a 1920.
 
-### ⚠️ Štvrtá vrstva existuje len na mobile
+### ⚠️ Štvrtá vrstva existuje len pod 1024 px
 
 Vodorovný gradient tmaví ľavú polovicu, lebo tam na širokej obrazovke sedí
 text. Na mobile text zaberá celú šírku a pod jeho pravým okrajom zostane
 nezatmavená fotka — meranie tam padlo na 2,8:1. Rieši to plošná vrstva
-`md:hidden`, nie zosilnenie vodorovného gradientu: ten by na desktope
+`lg:hidden`, nie zosilnenie vodorovného gradientu: ten by na desktope
 zbytočne zhasol stranu, kde má byť fotka vidieť.
+
+Pôvodne bola `md:hidden`, no pri 768 px text ešte siaha takmer cez celú
+šírku a podnadpis padal na 3,6:1 pri každom výreze fotky.
+
+Hero je spoločný komponent `components/HeroPodstranky.tsx` pre služby
+aj radcu — hodnoty prekrytia sú len tam.
 
 ### ⚠️ Do širokouhlých pásov patria len fotky na šírku
 

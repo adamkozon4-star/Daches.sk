@@ -92,8 +92,8 @@
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, cv.width, cv.height);
 
-  // Štvrtá vrstva existuje len pod breakpointom md (768 px).
-  if (window.innerWidth < 768) {
+  // Štvrtá vrstva existuje len pod breakpointom lg (1024 px).
+  if (window.innerWidth < 1024) {
     ctx.fillStyle = "rgba(17,17,17,0.34)";
     ctx.fillRect(0, 0, cv.width, cv.height);
   }

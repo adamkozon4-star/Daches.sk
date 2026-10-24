@@ -30,7 +30,12 @@ export function IndexKapitol({ kapitoly }: { kapitoly: Kapitola[] }) {
       className="border-t border-white/8 bg-dark print:hidden"
     >
       <div className="container-max">
-        <ol className="grid md:grid-cols-2 lg:grid-cols-4">
+        {/* Články radcu majú aj tri kapitoly — štvrtý stĺpec by zostal prázdny. */}
+        <ol
+          className={`grid ${
+            kapitoly.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-4"
+          }`}
+        >
           {kapitoly.map((k, i) => (
             <li key={k.id}>
               <a

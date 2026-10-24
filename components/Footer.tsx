@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone } from "lucide-react";
 import { company, footer, navLinks } from "@/lib/content";
+import { clanky } from "@/lib/radca";
 import { sluzby } from "@/lib/sluzby";
 import { brandLogo } from "@/lib/images";
 
@@ -9,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="bg-dark">
       <div className="container-max py-16 lg:py-20">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.5fr)_repeat(4,minmax(0,1fr))]">
           <div>
             <Image
               src={brandLogo}
@@ -78,6 +79,23 @@ export default function Footer() {
                   Cenový kalkulátor
                 </Link>
               </li>
+            </ul>
+          </nav>
+
+          {/* Radca v pätke — každý článok má odkaz z každej stránky webu. */}
+          <nav aria-label="Radca">
+            <p className="text-eyebrow uppercase text-white/40">Radca</p>
+            <ul className="mt-5 flex flex-col gap-3">
+              {clanky.map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/radca/${c.slug}`}
+                    className="text-sm text-white/70 transition-colors duration-[var(--d-micro)] hover:text-white"
+                  >
+                    {c.navLabel}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
 

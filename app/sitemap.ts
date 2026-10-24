@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { company } from "@/lib/content";
+import { clanky } from "@/lib/radca";
 import { sluzby } from "@/lib/sluzby";
 
 export const dynamic = "force-static";
@@ -12,13 +13,15 @@ export const dynamic = "force-static";
  * dátumu prestane veriť a prestane ho používať na plánovanie prehľadávania.
  *
  * Preto: pri zmene obsahu stránky zmeň jej dátum tu. Pri zmene kódu,
- * ktorá sa obsahu netýka, ho nechaj tak.
+ * ktorá sa obsahu netýka, ho nechaj tak. Články radcu majú dátum
+ * priamo v sebe (`upravene`) — ten istý ide aj do schémy `Article`.
  */
 const zmenene = {
   uvod: "2026-10-22",
   kalkulator: "2026-09-19",
   sluzby: "2026-10-24",
   pravne: "2026-08-26",
+  radca: "2026-10-24",
 } as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -34,6 +37,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: zmenene.sluzby,
       changeFrequency: "monthly" as const,
       priority: 0.9,
+    })),
+    {
+      url: `${company.url}/radca`,
+      lastModified: zmenene.radca,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...clanky.map((c) => ({
+      url: `${company.url}/radca/${c.slug}`,
+      lastModified: c.upravene,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
     {
       url: `${company.url}/kalkulator`,

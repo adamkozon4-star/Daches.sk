@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Check, HardHat, Phone } from "lucide-react";
-import Blueprint from "@/components/Blueprint";
-import Drobceky from "@/components/Drobceky";
 import DopytForm from "@/components/sluzby/DopytForm";
 import Faq from "@/components/Faq";
+import HeroPodstranky from "@/components/HeroPodstranky";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import { IndexKapitol, Kapitoly } from "@/components/sluzby/Kapitoly";
 import { areaServed, company } from "@/lib/content";
+import { clankyKSluzbe } from "@/lib/radca";
 import { najdiSluzbu, sluzby } from "@/lib/sluzby";
 
 type Props = { params: Promise<{ sluzba: string }> };
@@ -51,6 +50,9 @@ export default async function Page({ params }: Props) {
     .map((slug) => najdiSluzbu(slug))
     .filter((x) => x !== undefined);
 
+  /** Články radcu, ktoré na túto službu odkazujú — odkaz ide aj naspäť. */
+  const zRadcu = clankyKSluzbe(s.slug);
+
   /**
    * Rozsah prác pre `OfferCatalog` sa berie z kapitol — je to blok typu
    * `zoznam`. Nech je zoznam služieb v schéme vždy ten istý, ktorý číta
@@ -90,177 +92,42 @@ export default async function Page({ params }: Props) {
   return (
     <>
       {/* ---------- Úvod ---------- */}
-      {/*
-        Fotka ide na celú plochu, nie do rámčeka vedľa textu.
-
-        Pôvodne tu bola rozdelená mriežka text | fotka na plochom tmavom páse
-        a vedľa hero úvodnej stránky to pôsobilo ako iný web. Toto je tá istá
-        skladba ako na úvodnej: fotka pod textom, trojvrstvové prekrytie,
-        štítok, podčiarknuté nosné slovo.
-
-        Pozor na `-z-10` pri obale fotky — sekcia má vlastné `bg-dark`, takže
-        záporný z-index by fotku vykreslil ZA pozadie vlastnej sekcie.
-        Obsah sa preto dvíha cez `relative z-10` (viď AGENTS.md).
-      */}
-      <section
-        aria-label={s.navLabel}
-        className="relative flex min-h-[64svh] items-end overflow-hidden bg-dark pt-[var(--header-h)] lg:min-h-[70svh]"
-      >
-        <div className="absolute inset-0">
-          {/*
-            Mierka 108 % kryje posun parallaxu (±4 %), inak by pri kraji
-            vznikol pruh pozadia.
-          */}
-          <div className="parallax-up absolute inset-0 scale-[1.08]">
-            <Image
-              src={s.foto.src}
-              alt={s.foto.alt}
-              fill
-              priority
-              fetchPriority="high"
-              sizes="100vw"
-              quality={85}
-              style={{ objectPosition: s.foto.pozicia ?? "center" }}
-              className="object-cover"
-            />
-          </div>
-
-          {/*
-            ⚠️ Tri vrstvy sa NÁSOBIA, nesčítavajú.
-
-            Prvý pokus mal 0.52 / 0.74 / 0.66 a vľavo dole z fotky presvitali
-            4 % — hero bol prakticky čierny obdĺžnik. Zostatková viditeľnosť
-            je (1-a₁)(1-a₂)(1-a₃), takže tri „stredne silné" vrstvy nad sebou
-            fotku zhasnú.
-
-            Súčasné hodnoty: pod textom vľavo dole ostáva ~15 % fotky,
-            vpravo v strede ~66 %. Vodorovná a horná vrstva sa zosilnili
-            (0,52 → 0,64 a 0,60 → 0,66), keď pribudli fotky krovov so svetlou
-            oblohou a drevom — nadpis tam pri 768 px padal na 2,6:1. Základ sa dvíhal z 0,26 kvôli svetlému
-            drevu na fotke výmeny strechy — podnadpis tam padal na 4,27:1. Kontrast bieleho textu je nad 9:1 aj pri
-            úplne bielom mieste fotky — zmerané, nie odhadnuté.
-            Pri zmene hodnôt meranie zopakuj.
-          */}
-          <div className="absolute inset-0 bg-[rgba(17,17,17,0.32)]" />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(90deg, rgba(17,17,17,0.64) 0%, rgba(17,17,17,0.22) 55%, rgba(17,17,17,0.03) 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(17,17,17,0.66) 0%, rgba(17,17,17,0) 34%, rgba(17,17,17,0) 62%, rgba(17,17,17,0.40) 100%)",
-            }}
-          />
-
-          {/*
-            Štvrtá vrstva len pre mobil.
-
-            Vodorovný gradient tmaví ľavú polovicu, lebo na širokej obrazovke
-            tam sedí text. Na mobile text zaberá celú šírku, takže mu pod
-            pravým okrajom zostane nezatmavená fotka — pri tejto zákazke
-            obloha a oranžová krytina. Meranie tam padlo na 2,8:1.
-
-            Riešenie je plošné stmavenie navyše, nie zosilnenie vodorovného
-            gradientu — ten by na desktope zbytočne zhasol pravú stranu,
-            kde má byť fotka vidieť.
-          */}
-          <div className="absolute inset-0 bg-[rgba(17,17,17,0.34)] md:hidden" />
-        </div>
-
-        <Blueprint
-          light
-          className="-right-28 bottom-8 hidden h-[360px] w-[620px] opacity-70 lg:block"
-        />
-
-        <div className="container-max relative z-10 w-full py-12 lg:py-16">
-          <div className="[&_a]:text-white/78 [&_a:hover]:text-white [&_span]:text-white/95 [&_svg]:text-white/45">
-            <Drobceky
-              polozky={[
-                { label: "Úvod", href: "/" },
-                { label: "Služby", href: "/#sluzby" },
-                { label: s.navLabel },
-              ]}
-            />
-          </div>
-
-          <div className="mt-9 lg:mt-12">
-            <div className="max-w-3xl">
-              <p
-                data-reveal="up"
-                className="text-eyebrow inline-flex items-center gap-2 rounded-full border border-white/25 bg-[rgba(17,17,17,0.55)] px-3.5 py-2 uppercase text-white backdrop-blur-sm"
-              >
-                <HardHat size={13} strokeWidth={2.5} aria-hidden="true" />
-                {s.pill}
-              </p>
-
-              <h1
-                data-reveal="up"
-                style={{ "--reveal-delay": "100ms" } as React.CSSProperties}
-                className="text-hero mt-7 text-balance leading-[1.07] text-white"
-              >
-                {s.nadpis.pred}
-                <span className="mark">{s.nadpis.zvyraznene}</span>
-                {s.nadpis.za}
-              </h1>
-
-              <p
-                data-reveal="up"
-                style={{ "--reveal-delay": "220ms" } as React.CSSProperties}
-                className="text-lead mt-7 max-w-[54ch] text-white/95"
-              >
-                {s.lead}
-              </p>
-
-              <div
-                data-reveal="up"
-                style={{ "--reveal-delay": "330ms" } as React.CSSProperties}
-                className="mt-9 flex flex-wrap gap-3"
-              >
-                {s.bezKalkulatora ? (
-                  <a href="#dopyt" className="btn btn-accent">
-                    Poslať nezáväzný dopyt
-                    <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
-                  </a>
-                ) : (
-                  <a href="/kalkulator" className="btn btn-accent">
-                    Vypočítať orientačnú cenu
-                    <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
-                  </a>
-                )}
-                <a
-                  href={company.phoneHref}
-                  className="btn border border-white/22 text-white backdrop-blur-sm hover:bg-white/10"
-                >
-                  <Phone size={16} strokeWidth={2.5} aria-hidden="true" />
-                  <span className="tabular">{company.phone}</span>
-                </a>
-              </div>
-
-              <ul
-                data-reveal="up"
-                style={{ "--reveal-delay": "430ms" } as React.CSSProperties}
-                className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/85"
-              >
-                {s.fakty.map((f) => (
-                  <li key={f} className="flex items-center gap-2">
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
-                    />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-          </div>
-        </div>
-      </section>
+      <HeroPodstranky
+        ariaLabel={s.navLabel}
+        foto={s.foto}
+        drobceky={[
+          { label: "Úvod", href: "/" },
+          { label: "Služby", href: "/#sluzby" },
+          { label: s.navLabel },
+        ]}
+        pill={s.pill}
+        ikona={<HardHat size={13} strokeWidth={2.5} aria-hidden="true" />}
+        nadpis={s.nadpis}
+        lead={s.lead}
+        fakty={s.fakty}
+        akcie={
+          <>
+            {s.bezKalkulatora ? (
+              <a href="#dopyt" className="btn btn-accent">
+                Poslať nezáväzný dopyt
+                <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
+              </a>
+            ) : (
+              <a href="/kalkulator" className="btn btn-accent">
+                Vypočítať orientačnú cenu
+                <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
+              </a>
+            )}
+            <a
+              href={company.phoneHref}
+              className="btn border border-white/22 text-white backdrop-blur-sm hover:bg-white/10"
+            >
+              <Phone size={16} strokeWidth={2.5} aria-hidden="true" />
+              <span className="tabular">{company.phone}</span>
+            </a>
+          </>
+        }
+      />
 
       <IndexKapitol kapitoly={s.kapitoly} />
 
@@ -434,6 +301,30 @@ export default async function Page({ params }: Props) {
               </Link>
             </Reveal>
           </ul>
+
+          {zRadcu.length ? (
+            <div className="mt-16 border-t border-line pt-10 lg:mt-20">
+              <h3 className="text-eyebrow uppercase text-muted">Z radcu</h3>
+              <ul className="mt-5 grid gap-x-10 gap-y-3 sm:grid-cols-2">
+                {zRadcu.map((d) => (
+                  <li key={d.slug}>
+                    <Link
+                      href={`/radca/${d.slug}`}
+                      className="group inline-flex items-center gap-2 text-[15px] font-semibold text-dark transition-colors duration-[var(--d-micro)] hover:text-accent-hover"
+                    >
+                      {d.title}
+                      <ArrowRight
+                        size={15}
+                        strokeWidth={2.5}
+                        aria-hidden="true"
+                        className="shrink-0 transition-transform duration-[var(--d-short)] group-hover:translate-x-1"
+                      />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
       </section>
 

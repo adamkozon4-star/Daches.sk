@@ -53,6 +53,7 @@ export const navLinks = [
   { label: "Priebeh realizácie", href: "/#priebeh", submenu: false },
   { label: "Prečo Daches", href: "/#preco-daches", submenu: false },
   { label: "Materiály", href: "/#materialy", submenu: false },
+  { label: "Radca", href: "/radca", submenu: false },
   { label: "Kontakt", href: "/#kontakt", submenu: false },
 ] as const;
 

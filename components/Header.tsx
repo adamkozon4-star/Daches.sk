@@ -78,7 +78,12 @@ export default function Header() {
         </Link>
 
         <nav aria-label="Hlavná navigácia" className="hidden lg:block">
-          <ul className="flex items-center gap-8">
+          {/*
+            Sedem položiek sa pri 1024 px zmestí len s menšími medzerami
+            a bez čísla telefónu vpravo (to je od 1280 px). Pod 1280 px je
+            telefón aj tak v hero každej stránky a v ponuke tlačidla.
+          */}
+          <ul className="flex items-center gap-5 whitespace-nowrap xl:gap-8">
             {navLinks.map((link) =>
               link.submenu ? (
                 /*
@@ -147,10 +152,10 @@ export default function Header() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-4 lg:flex">
+        <div className="hidden shrink-0 items-center gap-4 lg:flex">
           <a
             href={company.phoneHref}
-            className="tabular inline-flex items-center gap-2 text-sm font-semibold text-white transition-colors duration-[var(--d-micro)] hover:text-accent"
+            className="tabular hidden items-center gap-2 whitespace-nowrap xl:inline-flex text-sm font-semibold text-white transition-colors duration-[var(--d-micro)] hover:text-accent"
           >
             <Phone size={15} strokeWidth={2} aria-hidden="true" />
             {company.phone}
