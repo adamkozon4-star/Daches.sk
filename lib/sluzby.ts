@@ -160,8 +160,11 @@ export const sluzby: Sluzba[] = [
           "Obava z hluku pri daždi je najčastejšia a pri obytnom dome neopodstatnená. Hluk vzniká tam, kde je plech napnutý nad vzduchovou medzerou bez podkladu — na prístreškoch a hospodárskych budovách. Pod krytinou obytného domu je debnenie alebo latovanie, separačná vrstva a v podkroví izolácia.",
         ],
         foto: {
-          src: photos.konstrukciaKrovu,
-          alt: "Drevený krov zvnútra — konštrukcia, ktorá nesie hmotnosť krytiny, realizácia na Orave",
+          // Kapitola je o tom, čo musí krov uniesť — preto skutočný krov.
+          // Pôvodne tu bola fotka, ktorá sa podľa názvu súboru tvárila ako
+          // krov zvnútra, no ukazuje oplechovanie podhľadu (viď lib/images.ts).
+          src: photos.vystavbaKrovov,
+          alt: "Drevený krov rodinného domu pred položením krytiny — konštrukcia, ktorá nesie jej hmotnosť, Orava",
         },
         bloky: [
           {

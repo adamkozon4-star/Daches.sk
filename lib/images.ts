@@ -8,13 +8,35 @@
  * Alt texty sú popisné a obsahujú lokalitu — pre vyhľadávače aj pre AI modely
  * je alt jeden z mála zdrojov informácie o tom, čo je na fotke.
  */
+/*
+ * ⚠️ NÁZVY SÚBOROV NESEDIA S OBSAHOM FOTIEK.
+ *
+ * Pri pôvodnom importe sa názvy poprehadzovali — dva súbory si vymenili
+ * mená a tri ďalšie sa posunuli dokola. Overené pohľadom na každú fotku.
+ * Na webe tak viseli viditeľne nesprávne popisy: pod fotkou krovu
+ * „Detail odkvapu", pod klampiarinou „Konštrukcia krovu zvnútra",
+ * a karty služieb Tesárske a Klampiarske práce mali fotky vymenené.
+ *
+ * Súbory sa NEpremenovali — zmenili by sa ich verejné adresy. Premenovali
+ * sa len názvy v kóde, aby zodpovedali tomu, čo je na fotke:
+ *
+ *   súbor                              │ čo je naozaj na fotke
+ *   ───────────────────────────────────┼────────────────────────────────────
+ *   konstrukcia-krovu-zvnutra.jpg      │ plechový podhľad a odkvap pod falc. strechou
+ *   detail-odkvapu-oplechovanie.jpg    │ nový drevený krov na murovanej novostavbe
+ *   dom-drevena-fasada.jpg             │ montáž strešného okna na novostavbe v zime
+ *   montaz-stresneho-okna-zima.jpg     │ starší dom s tmavou krytinou a strešným oknom
+ *   sindlova-krytina-stresne-okna.jpg  │ dom s drevenou fasádou počas prác na lešení
+ *
+ * Pri výbere fotky sa vždy riaď názvom v kóde, nie názvom súboru.
+ */
 import heroStrecha from "@/public/images/hero-strecha.jpg";
-import konstrukciaKrovu from "@/public/images/konstrukcia-krovu-zvnutra.jpg";
-import sindlovaKrytina from "@/public/images/sindlova-krytina-stresne-okna.jpg";
-import domDrevenaFasada from "@/public/images/dom-drevena-fasada.jpg";
+import oplechovaniePodhladu from "@/public/images/konstrukcia-krovu-zvnutra.jpg";
+import drevenaFasada from "@/public/images/sindlova-krytina-stresne-okna.jpg";
+import novostavbaZima from "@/public/images/dom-drevena-fasada.jpg";
 import pultovyKrov from "@/public/images/pultovy-krov-horske-prostredie.jpg";
-import detailOdkvapu from "@/public/images/detail-odkvapu-oplechovanie.jpg";
-import montazOknaZima from "@/public/images/montaz-stresneho-okna-zima.jpg";
+import krovNovostavba from "@/public/images/detail-odkvapu-oplechovanie.jpg";
+import starsiDomOkno from "@/public/images/montaz-stresneho-okna-zima.jpg";
 import osadenieKrovu from "@/public/images/osadenie-krovu.jpg";
 import vystavbaKrovov from "@/public/images/vystavba-krovov.jpg";
 import stresneKrytiny from "@/public/images/stresne-krytiny.jpg";
@@ -64,12 +86,12 @@ export type Photo = {
 
 export const photos = {
   heroStrecha,
-  konstrukciaKrovu,
-  sindlovaKrytina,
-  domDrevenaFasada,
+  oplechovaniePodhladu,
+  drevenaFasada,
+  novostavbaZima,
   pultovyKrov,
-  detailOdkvapu,
-  montazOknaZima,
+  krovNovostavba,
+  starsiDomOkno,
   osadenieKrovu,
   vystavbaKrovov,
   stresneKrytiny,
