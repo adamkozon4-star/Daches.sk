@@ -133,8 +133,10 @@ export default async function Page({ params }: Props) {
             je (1-a₁)(1-a₂)(1-a₃), takže tri „stredne silné" vrstvy nad sebou
             fotku zhasnú.
 
-            Súčasné hodnoty: pod textom vľavo dole ostáva ~19 % fotky,
-            vpravo v strede ~66 %. Základ sa dvíhal z 0,26 kvôli svetlému
+            Súčasné hodnoty: pod textom vľavo dole ostáva ~15 % fotky,
+            vpravo v strede ~66 %. Vodorovná a horná vrstva sa zosilnili
+            (0,52 → 0,64 a 0,60 → 0,66), keď pribudli fotky krovov so svetlou
+            oblohou a drevom — nadpis tam pri 768 px padal na 2,6:1. Základ sa dvíhal z 0,26 kvôli svetlému
             drevu na fotke výmeny strechy — podnadpis tam padal na 4,27:1. Kontrast bieleho textu je nad 9:1 aj pri
             úplne bielom mieste fotky — zmerané, nie odhadnuté.
             Pri zmene hodnôt meranie zopakuj.
@@ -144,14 +146,14 @@ export default async function Page({ params }: Props) {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(90deg, rgba(17,17,17,0.52) 0%, rgba(17,17,17,0.15) 55%, rgba(17,17,17,0.03) 100%)",
+                "linear-gradient(90deg, rgba(17,17,17,0.64) 0%, rgba(17,17,17,0.22) 55%, rgba(17,17,17,0.03) 100%)",
             }}
           />
           <div
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, rgba(17,17,17,0.60) 0%, rgba(17,17,17,0) 34%, rgba(17,17,17,0) 62%, rgba(17,17,17,0.40) 100%)",
+                "linear-gradient(180deg, rgba(17,17,17,0.66) 0%, rgba(17,17,17,0) 34%, rgba(17,17,17,0) 62%, rgba(17,17,17,0.40) 100%)",
             }}
           />
 
@@ -219,10 +221,17 @@ export default async function Page({ params }: Props) {
                 style={{ "--reveal-delay": "330ms" } as React.CSSProperties}
                 className="mt-9 flex flex-wrap gap-3"
               >
-                <a href="/kalkulator" className="btn btn-accent">
-                  Vypočítať orientačnú cenu
-                  <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
-                </a>
+                {s.bezKalkulatora ? (
+                  <a href="#dopyt" className="btn btn-accent">
+                    Poslať nezáväzný dopyt
+                    <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
+                  </a>
+                ) : (
+                  <a href="/kalkulator" className="btn btn-accent">
+                    Vypočítať orientačnú cenu
+                    <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
+                  </a>
+                )}
                 <a
                   href={company.phoneHref}
                   className="btn border border-white/22 text-white backdrop-blur-sm hover:bg-white/10"
@@ -264,30 +273,40 @@ export default async function Page({ params }: Props) {
             <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
               <div>
                 <p className="eyebrow text-eyebrow uppercase text-accent">
-                  Orientačná cena
+                  {s.bezKalkulatora ? "Cena" : "Orientačná cena"}
                 </p>
                 <h2 id="cena" className="text-h2 mt-5 text-balance text-white">
                   Koľko to bude stáť
                 </h2>
                 <p className="text-lead mt-5 max-w-[54ch] text-white/60">
-                  Zadáte tvar a plochu strechy, bežné metre klampiarskych prvkov
-                  dopočítame za vás. Dostanete rozsah s rozpisom na materiál
-                  a prácu — bez registrácie a bez čakania na odpoveď.
+                  {s.bezKalkulatora
+                    ? s.bezKalkulatora.text
+                    : "Zadáte tvar a plochu strechy, bežné metre klampiarskych prvkov dopočítame za vás. Dostanete rozsah s rozpisom na materiál a prácu — bez registrácie a bez čakania na odpoveď."}
                 </p>
               </div>
 
               <div className="flex flex-col gap-3 lg:items-end">
-                <a href="/kalkulator" className="btn btn-accent w-full justify-center sm:w-auto">
-                  Spustiť kalkulátor
-                  <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
-                </a>
-                {/* Druhá cesta pre toho, kto si cenu rátať nechce. */}
-                <a
-                  href="#dopyt"
-                  className="btn w-full justify-center border border-white/22 text-white hover:bg-white/10 sm:w-auto"
-                >
-                  Radšej mi napíšte
-                </a>
+                {/* Opravy kalkulátor neoceňuje — tlačidlo by viedlo do slepej uličky. */}
+                {s.bezKalkulatora ? (
+                  <a href="#dopyt" className="btn btn-accent w-full justify-center sm:w-auto">
+                    Poslať nezáväzný dopyt
+                    <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
+                  </a>
+                ) : (
+                  <>
+                    <a href="/kalkulator" className="btn btn-accent w-full justify-center sm:w-auto">
+                      Spustiť kalkulátor
+                      <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
+                    </a>
+                    {/* Druhá cesta pre toho, kto si cenu rátať nechce. */}
+                    <a
+                      href="#dopyt"
+                      className="btn w-full justify-center border border-white/22 text-white hover:bg-white/10 sm:w-auto"
+                    >
+                      Radšej mi napíšte
+                    </a>
+                  </>
+                )}
                 <p className="max-w-[34ch] text-sm leading-relaxed text-white/45 lg:text-right">
                   Záväznú cenu povieme po bezplatnej obhliadke — tú zadarmo
                   nenahradí žiadny výpočet.
@@ -369,7 +388,7 @@ export default async function Page({ params }: Props) {
             mark="zaujímať"
           />
 
-          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-14">
+          <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
             {suvisiace.map((d, i) => (
               <Reveal as="li" key={d.slug} index={i}>
                 <Link

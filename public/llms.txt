@@ -42,5 +42,12 @@ Kvalitné rezivo, strešné krytiny, poistné hydroizolácie, spojovací materi�
 ## Stránky
 
 - [Úvod](https://daches.sk/): služby, realizácie, postup, materiály a kontakt
+- [Výstavba krovov](https://daches.sk/sluzby/vystavba-krovov): typy krovov, rezivo, postup a z čoho sa skladá cena
+- [Nová strecha na kľúč](https://daches.sk/sluzby/nova-strecha-na-kluc): čo zahŕňa, postup, kedy začať a čo ovplyvní cenu
+- [Výmena strechy](https://daches.sk/sluzby/vymena-strechy): postup výmeny na staršom dome, nálezy po odkrytí, povolenie
+- [Tesárske práce](https://daches.sk/sluzby/tesarske-prace): sanácia a úpravy krovu, podklad pod krytinu
+- [Plechová strecha](https://daches.sk/sluzby/plechova-strecha): typy plechovej krytiny, pozink a hliník, skladba strechy
+- [Klampiarske práce a opravy](https://daches.sk/sluzby/klampiarske-prace): odkvapy, oplechovanie komína, príčiny zatekania
+- [Kalkulátor](https://daches.sk/kalkulator): orientačná cena strechy s rozpisom na materiál a prácu
 - [Ochrana osobných údajov](https://daches.sk/ochrana-osobnych-udajov)
 - [Cookies](https://daches.sk/cookies)

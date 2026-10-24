@@ -78,14 +78,14 @@
   ctx.fillRect(0, 0, cv.width, cv.height);
 
   let g = ctx.createLinearGradient(0, 0, cv.width, 0);
-  g.addColorStop(0, "rgba(17,17,17,0.52)");
-  g.addColorStop(0.55, "rgba(17,17,17,0.15)");
+  g.addColorStop(0, "rgba(17,17,17,0.64)");
+  g.addColorStop(0.55, "rgba(17,17,17,0.22)");
   g.addColorStop(1, "rgba(17,17,17,0.03)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, cv.width, cv.height);
 
   g = ctx.createLinearGradient(0, 0, 0, cv.height);
-  g.addColorStop(0, "rgba(17,17,17,0.60)");
+  g.addColorStop(0, "rgba(17,17,17,0.66)");
   g.addColorStop(0.34, "rgba(17,17,17,0)");
   g.addColorStop(0.62, "rgba(17,17,17,0)");
   g.addColorStop(1, "rgba(17,17,17,0.40)");

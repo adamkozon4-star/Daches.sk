@@ -17,7 +17,7 @@ export const dynamic = "force-static";
 const zmenene = {
   uvod: "2026-10-22",
   kalkulator: "2026-09-19",
-  sluzby: "2026-10-22",
+  sluzby: "2026-10-24",
   pravne: "2026-08-26",
 } as const;
 

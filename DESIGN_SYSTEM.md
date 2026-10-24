@@ -268,7 +268,16 @@ Zostatková viditeľnosť fotky je `(1-a₁)(1-a₂)(1-a₃)`. Prvý pokus mal
 0,52 / 0,74 / 0,66 a vľavo dole presvitali **4 %** fotky — hero bol čierny
 obdĺžnik. Tri „stredne silné" vrstvy nad sebou fotku zhasnú.
 
-Súčasné hodnoty nechávajú pod textom ~21 % a vpravo v strede ~72 %.
+Súčasné hodnoty: plošná 0,32, vodorovná 0,64 → 0,22 → 0,03, zvislá
+0,66 → 0 → 0 → 0,40. Pod textom vľavo dole ostáva ~15 % fotky, vpravo
+v strede ~66 %.
+
+Vodorovná a horná vrstva sa zosilnili pri ďalších štyroch podstránkach.
+Prvé dve fotky mali pod textom tmavú strechu; fotky krovov a novostavieb
+majú hore svetlú oblohu a svetlé drevo a pri 768 – 1920 px padal nadpis
+aj podnadpis pod prah (najhoršie 2,6:1). Výrezom sa to vyriešiť nedalo —
+obloha je na všetkých. Pri pridaní služby zmeraj jej hero pri šírkach
+375, 768, 1024, 1440 a 1920.
 
 ### ⚠️ Štvrtá vrstva existuje len na mobile
 
@@ -287,7 +296,7 @@ strecha. Fotky na výšku patria do galérie a do mriežok.
 
 ### Výrez sa ladí cez `pozicia`, nie cez silnejšie prekrytie
 
-`Obrazok` v `lib/sluzby.ts` má voliteľné `pozicia` (`object-position`).
+`Obrazok` v `lib/sluzby/typy.ts` má voliteľné `pozicia` (`object-position`).
 Keď biely text padol nad svetlou oblohou na **2,9:1**, správne riešenie
 nebolo stmaviť celú fotku, ale posunúť výrez nižšie — nad tmavú strechu.
 Po posune `center 74 %` vyšiel nadpis na **4,47:1** a fotka zostala svetlá.

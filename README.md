@@ -78,8 +78,10 @@ načíta až po kliknutí, písmo self-hostované s dvoma váhami.
 Dovtedy bol web jedna dlhá stránka a Google jej vedel priradiť zhruba jeden
 okruh dopytov. Každá služba má teraz vlastnú URL, `title`, text a FAQ.
 
-Pridanie ďalšej služby = **jeden záznam v `lib/sluzby.ts`** plus doplnenie
-`slug` k príslušnej karte v `services` v `lib/content.ts`. Routa, metadáta,
+Každá služba je jeden súbor v `lib/sluzby/` (spolu ich je šesť, v poradí
+kariet na úvodnej stránke). Pridanie ďalšej = **nový súbor, záznam do poľa
+v `lib/sluzby/index.ts`** a doplnenie `slug` k príslušnej karte v `services`
+v `lib/content.ts`. Routa, metadáta,
 drobčeky, schéma, sitemap aj odkazy v pätke sa napoja samy.
 
 ### Kapitoly
@@ -89,7 +91,7 @@ Robí to z nej dokument, v ktorom sa dá orientovať — čitateľ vidí dopredu
 čo ho čaká. Každá kapitola má veľké **tvrdenie** vľavo a podrobnosti vpravo:
 kto stránku preletí očami, prečíta si len tvrdenia a aj tak odíde s odpoveďou.
 
-Kapitola môže niesť bloky štyroch typov (`Blok` v `lib/sluzby.ts`):
+Kapitola môže niesť bloky štyroch typov (`Blok` v `lib/sluzby/typy.ts`):
 
 | Typ | Na čo |
 |---|---|
@@ -179,8 +181,9 @@ a nesprávny údaj je horší než žiadny.
       a odhadnuté trhové ceny. Nechať klienta prejsť a prepnúť na `"potvrdeny"`.
 - [ ] **Overiť doménu `send.daches.sk` v Resende** + DNS záznamy na Websupporte.
       Bez toho dopyty padajú do spamu (posielajú sa z testovacej adresy Resendu).
-- [ ] **Ďalšie podstránky služieb** — pripravené v pláne: nová strecha na kľúč,
-      klampiarske práce. Radca (cena, dotácia, plech vs. škridla) zatiaľ nie je.
+- [x] **Podstránky všetkých šiestich služieb.** Opravy (tesárske, klampiarske)
+      majú `bezKalkulatora` — namiesto kalkulátora vedú na dopyt.
+- [ ] Radca (cena, dotácia, plech vs. škridla) zatiaľ nie je.
 - [ ] **Premenné prostredia vo Verceli** — `RESEND_API_KEY`, `DOPYT_ODOSIELATEL`,
       `DOPYT_PRIJEMCA`. Názvy sú v `.env.example`.
 

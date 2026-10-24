@@ -104,7 +104,7 @@ export const trustItems = [
 export const services = [
   {
     number: "01",
-    slug: "",
+    slug: "vystavba-krovov",
     title: "Výstavba krovov",
     description:
       "Výroba a montáž drevených krovov podľa projektu a konkrétnych požiadaviek stavby.",
@@ -113,7 +113,7 @@ export const services = [
   },
   {
     number: "02",
-    slug: "",
+    slug: "nova-strecha-na-kluc",
     title: "Nové strechy",
     description:
       "Kompletná realizácia strechy pre novostavby vrátane prípravy a montáže jednotlivých prvkov.",
@@ -131,7 +131,7 @@ export const services = [
   },
   {
     number: "04",
-    slug: "",
+    slug: "tesarske-prace",
     title: "Tesárske práce",
     description:
       "Precízne tesárske práce pri novostavbách, rekonštrukciách a ďalších stavebných projektoch.",
@@ -149,7 +149,7 @@ export const services = [
   },
   {
     number: "06",
-    slug: "",
+    slug: "klampiarske-prace",
     title: "Klampiarske práce a opravy",
     description:
       "Odkvapové systémy, oplechovanie a lokálne opravy poškodených častí strechy.",
