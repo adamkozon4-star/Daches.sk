@@ -71,6 +71,18 @@ Klientský JavaScript majú len štyri komponenty: `Header`, `Gallery`, `MapEmbe
 importov → nulový CLS), hero fotka s `priority` + `fetchPriority="high"`, mapa sa
 načíta až po kliknutí, písmo self-hostované s dvoma váhami.
 
+### Studená cache fotiek
+
+Vercel zmenšuje fotky až pri prvej požiadavke na danú šírku a formát —
+prvá trvá ~1,3 s, z cache ~0,2 s. Cache drží najviac 31 dní. Preto:
+
+- `deviceSizes` v `next.config.ts` majú len šírky, ktoré dávajú inú fotku
+  (podklady majú max. 2048 px, širšie by boli tá istá fotka pod iným kľúčom),
+- `scripts/zahriat-obrazky.mjs` predgeneruje všetky varianty zo sitemap.
+  Spúšťa ho GitHub Action po každom produkčnom nasadení a každý pondelok;
+  ručne `node scripts/zahriat-obrazky.mjs`. Vo výstupe `MISS` = práve
+  vygenerované, `HIT` = už bolo v cache.
+
 ---
 
 ## Podstránky služieb

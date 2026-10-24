@@ -21,10 +21,21 @@ const nextConfig: NextConfig = {
      * prehliadač si z predvoleného srcsetu vybral 1200 a roztiahol ju na
      * 1539 px. Teraz má k dispozícii natívnu šírku a nič sa neroztahuje.
      *
-     * Väčšie šírky než zdroj Next nedogeneruje — 1920 a vyššie zostávajú
-     * pre prípad, že pribudnú ostrejšie podklady.
+     * ── Prečo nie viac šírok ─────────────────────────────────────────────
+     * Vercel generuje každú kombináciu šírka × formát zvlášť až pri prvej
+     * požiadavke. Prvá trvá ~1,3 s (kódovanie AVIF), z cache ~0,2 s —
+     * a hero fotky na nových podstránkach sa načítavali viditeľne pomaly.
+     *
+     * Väčšie šírky než zdroj Next nedogeneruje, len pošle originál. Pôvodné
+     * 1920 a 3840 tak pri 2048 px podkladoch dávali tú istú fotku pod iným
+     * kľúčom — dvakrát viac studených požiadaviek bez rozdielu v kvalite.
+     * 750 je o 10 % menšie ako 828 a len rozdeľovalo mobily medzi dva kľúče.
+     *
+     * Menej šírok = viac návštevníkov zdieľa ten istý variant = vyššia
+     * šanca, že je už v cache. Zvyšok rieši `scripts/zahriat-obrazky.mjs`.
+     * Ak pribudnú ostrejšie podklady než 2048 px, šírku pridaj sem.
      */
-    deviceSizes: [640, 750, 828, 1080, 1200, 1536, 1600, 1920, 2048, 3840],
+    deviceSizes: [640, 828, 1080, 1200, 1536, 1600, 2048],
     // Next 16 vyžaduje povolené hodnoty vopred.
     // 70 = miniatúry, 80 = obsahové fotky, 85 = lightbox.
     qualities: [70, 80, 85],

@@ -1,0 +1,32 @@
+# Predgeneruje fotky na Verceli, aby ich návštevník dostal z cache.
+# Prečo a ako: komentár v scripts/zahriat-obrazky.mjs.
+
+name: Zahriať fotky
+
+on:
+  # Vercel hlási výsledok nasadenia do GitHubu ako deployment status.
+  deployment_status:
+  # Cache drží najviac 31 dní — týždenný beh ju udrží teplú aj bez nasadení.
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  zahriat:
+    # Len úspešné produkčné nasadenie — náhľady majú inú adresu a vlastnú
+    # ochranu, a hlavne ich nikto z verejnosti nenavštevuje.
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/zahriat-obrazky.mjs https://daches.sk
