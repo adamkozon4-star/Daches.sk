@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import { company, navLinks } from "@/lib/content";
 import { brandLogo } from "@/lib/images";
@@ -16,7 +17,20 @@ import { sluzby } from "@/lib/sluzby";
  * miesta stránky. Navyše sa skrývanie spúšťalo aj pri kotvovej navigácii,
  * takže kliknutie na položku menu schovalo samotné menu.
  */
+/**
+ * Stránky, ktoré majú navrchu tmavú fotku — len na nich smie byť hlavička
+ * pred scrollovaním priehľadná. Biele logo a menu nad fotkou vyniknú.
+ *
+ * Zoznam je zámerne povolený (nie zakázaný): kalkulátor, právne stránky
+ * aj 404 majú navrchu biele pozadie a biela hlavička na nich bola úplne
+ * neviditeľná. Nová stránka tak dostane plnú hlavičku, kým ju sem
+ * niekto vedome nepridá.
+ */
+const tmavyUvod = (cesta: string) =>
+  cesta === "/" || cesta.startsWith("/sluzby/") || cesta === "/radca" || cesta.startsWith("/radca/");
+
 export default function Header() {
+  const priehladna = tmavyUvod(usePathname());
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -59,7 +73,7 @@ export default function Header() {
   return (
     <header
       className={`site-header fixed inset-x-0 top-0 z-50 border-b ${
-        scrolled || menuOpen
+        scrolled || menuOpen || !priehladna
           ? "border-white/8 bg-dark/92 backdrop-blur-xl"
           : "border-transparent bg-transparent"
       }`}
