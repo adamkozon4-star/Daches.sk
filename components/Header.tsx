@@ -146,7 +146,7 @@ export default function Header() {
                           href="/kalkulator"
                           className="block rounded-card px-3 py-2.5 text-sm font-medium text-white/75 transition-colors duration-[var(--d-micro)] hover:bg-white/8 hover:text-white"
                         >
-                          Cenový kalkulátor
+                          Kalkulačka ceny strechy
                         </a>
                       </li>
                     </ul>

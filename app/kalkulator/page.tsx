@@ -6,9 +6,11 @@ import Kalkulator, { KalkulatorZAdresy } from "@/components/kalkulator/Kalkulato
 import { calculator, company } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Cenový kalkulátor strechy",
+  // „Kalkulačka", nie „kalkulátor" — tak to ľudia píšu do Googlu
+  // (našepkávač: „kalkulačka ceny strechy", „cena strechy kalkulačka").
+  title: "Kalkulačka ceny strechy online",
   description:
-    "Zistite orientačnú cenu novej strechy, krovu alebo rekonštrukcie na Orave. Zadáte plochu a tvar strechy, bežné metre dopočítame za vás. Nezáväzne a bez registrácie.",
+    "Kalkulačka ceny strechy: zadáte tvar a plochu a do minúty máte orientačnú cenu novej strechy, krovu alebo rekonštrukcie s rozpisom. Bez registrácie.",
   alternates: { canonical: "/kalkulator" },
   robots: { index: true, follow: true },
   openGraph: {
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
     locale: "sk_SK",
     url: `${company.url}/kalkulator`,
     siteName: company.name,
-    title: "Cenový kalkulátor strechy — Daches s.r.o.",
+    title: "Kalkulačka ceny strechy online — Daches s.r.o.",
     description:
       "Orientačná cena strechy za pár minút. Plochu a tvar zadáte vy, bežné metre dopočítame.",
   },

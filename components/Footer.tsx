@@ -76,7 +76,7 @@ export default function Footer() {
                   href="/kalkulator"
                   className="text-sm text-white/70 transition-colors duration-[var(--d-micro)] hover:text-white"
                 >
-                  Cenový kalkulátor
+                  Kalkulačka ceny strechy
                 </Link>
               </li>
             </ul>

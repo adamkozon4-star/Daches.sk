@@ -20,7 +20,8 @@ const manrope = Manrope({
 });
 
 const description =
-  "Daches s.r.o. — strechárska a tesárska firma z Hruštína na Orave. Krovy, nové strechy na kľúč, rekonštrukcie striech, strešné krytiny a klampiarske práce. Osobná obhliadka a cena až po posúdení stavby.";
+  // Do 160 znakov — dlhší popis Google vo výsledkoch oreže (pôvodný mal 201).
+  "Strechárska a tesárska firma z Hruštína na Orave. Krovy, nové strechy na kľúč, rekonštrukcie a klampiarske práce. Bezplatná obhliadka.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(company.url),
@@ -83,6 +84,9 @@ const jsonLd = {
       description,
       url: company.url,
       image: `${company.url}/images/hero-strecha.jpg`,
+      // Štvorcové tmavé logo — biele logo z hlavičky by na bielom pozadí
+      // výsledkov vyhľadávania nebolo vidieť. Google chce aspoň 112 px.
+      logo: `${company.url}/logo-512.png`,
       telephone: "+421907481919",
       email: company.email,
       address: {

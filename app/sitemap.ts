@@ -17,8 +17,8 @@ export const dynamic = "force-static";
  * priamo v sebe (`upravene`) — ten istý ide aj do schémy `Article`.
  */
 const zmenene = {
-  uvod: "2026-10-22",
-  kalkulator: "2026-09-19",
+  uvod: "2026-10-25",
+  kalkulator: "2026-10-25",
   sluzby: "2026-10-24",
   pravne: "2026-08-26",
   radca: "2026-10-24",

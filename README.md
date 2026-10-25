@@ -71,6 +71,16 @@ Klientský JavaScript majú len štyri komponenty: `Header`, `Gallery`, `MapEmbe
 importov → nulový CLS), hero fotka s `priority` + `fetchPriority="high"`, mapa sa
 načíta až po kliknutí, písmo self-hostované s dvoma váhami.
 
+### Ohlasovanie vyhľadávačom
+
+- **Google:** Search Console — sitemap `https://daches.sk/sitemap.xml`
+  a pri nových stránkach „Request indexing". Google IndexNow nepodporuje.
+- **Bing, Seznam, Yandex (a cez Bing ChatGPT/Copilot):** IndexNow —
+  `node scripts/indexnow.mjs` (celá sitemap) alebo
+  `node scripts/indexnow.mjs /radca/novy-clanok` (len vybrané).
+  Spúšťať po zmene obsahu, nie pri každom nasadení. Overovací kľúč je
+  v `public/<kľúč>.txt` a je verejný zámerne.
+
 ### Studená cache fotiek
 
 Vercel zmenšuje fotky až pri prvej požiadavke na danú šírku a formát —

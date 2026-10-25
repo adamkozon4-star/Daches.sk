@@ -41,9 +41,14 @@ export default function TrustBar() {
                       aria-hidden="true"
                       className="icon-draw shrink-0 text-accent opacity-90 transition-opacity duration-[var(--d-short)] group-hover:opacity-100"
                     />
-                    <h3 className="text-h3 text-white/90 transition-colors duration-[var(--d-short)] group-hover:text-white lg:mt-5">
+                    {/*
+                      <p>, nie <h3>: lišta ide hneď po <h1> v hero a nemá
+                      vlastný <h2>. Nadpis H3 bez H2 audit hlási ako
+                      preskočenú úroveň a pre čítačky je to zlá osnova.
+                    */}
+                    <p className="text-h3 text-white/90 transition-colors duration-[var(--d-short)] group-hover:text-white lg:mt-5">
                       {item.title}
-                    </h3>
+                    </p>
                   </div>
                   <p className="mt-2 text-sm leading-relaxed text-white/58">
                     {item.text}
