@@ -5,7 +5,7 @@ export const vymenaStrechy: Sluzba = {
   slug: "vymena-strechy",
   navLabel: "Výmena strechy",
   odkazText: "Viac o výmene strechy",
-  title: "Výmena strechy na staršom dome",
+  title: "Výmena strechy Orava — postup a povolenie",
   description:
     "Výmena strechy na staršom dome na Orave — postup krok po kroku, čo sa ukáže po odkrytí, kedy treba povolenie a ako zistiť orientačnú cenu.",
   pill: "Rekonštrukcie · celá Orava",

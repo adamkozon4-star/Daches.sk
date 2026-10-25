@@ -5,7 +5,7 @@ export const vystavbaKrovov: Sluzba = {
   slug: "vystavba-krovov",
   navLabel: "Výstavba krovov",
   odkazText: "Viac o výstavbe krovov",
-  title: "Výstavba krovov — typy, rezivo a cena",
+  title: "Krovy Orava — výstavba, typy a cena",
   description:
     "Výroba a montáž drevených krovov na Orave. Hambálkový, väznicový alebo väzníky, aké rezivo, ako krov vzniká a prečo sa cena uvádza za m² aj za m³.",
   pill: "Tesárstvo · celá Orava",

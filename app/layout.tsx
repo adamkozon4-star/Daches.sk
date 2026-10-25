@@ -26,7 +26,9 @@ const description =
 export const metadata: Metadata = {
   metadataBase: new URL(company.url),
   title: {
-    default: "Daches s.r.o. — Strechy a krovy na Orave | Tesárske práce",
+    // „Strechári Orava", „strechy orava", „krovy orava" — tak to ľudia z Oravy
+    // píšu do Googlu (našepkávač, hl=sk). Do 60 znakov.
+    default: "Strechári Orava — strechy a krovy | Daches s.r.o.",
     template: "%s | Daches s.r.o.",
   },
   description,
@@ -102,7 +104,12 @@ const jsonLd = {
         latitude: company.lat,
         longitude: company.lng,
       },
-      areaServed: areaServed.map((name) => ({ "@type": "City", name })),
+      // Región aj menovité obce: „Orava" pokrýva dopyty typu „strechy orava",
+      // obce sú silnejší signál pre mapu v okolí konkrétneho miesta.
+      areaServed: [
+        { "@type": "AdministrativeArea", name: "Orava" },
+        ...areaServed.map((name) => ({ "@type": "City", name })),
+      ],
       openingHoursSpecification: {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: [

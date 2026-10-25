@@ -5,11 +5,11 @@ export const klampiarskePrace: Sluzba = {
   slug: "klampiarske-prace",
   navLabel: "Klampiarske práce a opravy",
   odkazText: "Viac o klampiarskych prácach",
-  title: "Klampiarske práce, odkvapy a opravy",
+  title: "Klampiar Orava — odkvapy, komíny, opravy",
   description:
     "Klampiarske práce na Orave — odkvapy a zvody, oplechovanie komína, hľadanie príčin zatekania a opravy striech. Ako to funguje a kde strecha zlyháva.",
   pill: "Klampiarstvo · celá Orava",
-  nadpis: { pred: "Klampiarske práce a ", zvyraznene: "opravy", za: " striech" },
+  nadpis: { pred: "Klampiarske práce a ", zvyraznene: "opravy", za: " na Orave" },
   lead: "Odkvapy a zvody, oplechovanie komínov a hľadanie príčin zatekania. Na nových strechách aj na tých, ktoré už roky stoja.",
   fakty: ["Odkvapy a zvody", "Oplechovanie komínov", "Hľadanie príčin zatekania"],
   foto: {

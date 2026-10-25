@@ -5,7 +5,7 @@ export const tesarskePrace: Sluzba = {
   slug: "tesarske-prace",
   navLabel: "Tesárske práce",
   odkazText: "Viac o tesárskych prácach",
-  title: "Tesárske práce a sanácia krovu",
+  title: "Tesárske práce Orava — sanácia krovu",
   description:
     "Tesárske práce na Orave — sanácia a zosilnenie krovu, úpravy pre strešné okná a podkrovie, debnenie a latovanie. Kedy treba statika a ako to prebieha.",
   pill: "Tesárstvo · celá Orava",

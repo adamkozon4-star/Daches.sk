@@ -5,7 +5,7 @@ export const novaStrechaNaKluc: Sluzba = {
   slug: "nova-strecha-na-kluc",
   navLabel: "Nová strecha na kľúč",
   odkazText: "Viac o novej streche na kľúč",
-  title: "Nová strecha na kľúč pre novostavbu",
+  title: "Nová strecha na kľúč Orava — novostavby",
   description:
     "Nová strecha na kľúč pre novostavby na Orave — krov, podklad, fólia, krytina aj klampiarina. Čo patrí do ceny, kedy začať a čo cenu ovplyvní.",
   pill: "Novostavby · celá Orava",

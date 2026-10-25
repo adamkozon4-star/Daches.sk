@@ -233,6 +233,14 @@ export default async function Page({ params }: Props) {
                   </li>
                 ))}
               </ul>
+
+              {/*
+                Obce, kde firma pôsobí — lokálny signál pre Google aj pre
+                návštevníka, ktorý chce vedieť, či k nemu prídeme.
+              */}
+              <p className="mt-6 text-sm leading-relaxed text-muted">
+                Pôsobíme na celej Orave — {areaServed.join(" · ")} a okolie.
+              </p>
             </Reveal>
 
             <Reveal delay={120}>
