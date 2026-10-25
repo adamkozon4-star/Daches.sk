@@ -123,11 +123,17 @@ const jsonLd = {
         closes: "17:00",
       },
       /**
-       * `sameAs` doplniť po dodaní odkazov od klienta (Google Business, Facebook).
+       * `sameAs` a `hasMap` spájajú web s Google profilom a Facebookom —
+       * podľa toho Google vie, že ide o tú istú firmu ako špendlík v mapách.
        * `aggregateRating` iba pri reálnych recenziách — vymyslené hodnotenie je
        * porušenie pravidiel Google a dôvod na manuálnu penalizáciu.
        */
-      sameAs: [],
+      sameAs: [company.mapa, company.facebook],
+      hasMap: company.mapa,
+      // IČO nemá v schema.org vlastnú vlastnosť — ide ako identifier.
+      identifier: { "@type": "PropertyValue", propertyID: "IČO", value: company.ico },
+      taxID: company.dic,
+      vatID: company.icDph,
     },
     {
       "@type": "Service",

@@ -31,10 +31,39 @@ export default function Footer() {
                 <Phone size={15} strokeWidth={2} aria-hidden="true" />
                 {company.phone}
               </a>
-              <p className="inline-flex items-center gap-2.5 text-white/58">
+              <a
+                href={company.mapa}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 text-white/58 transition-colors duration-[var(--d-micro)] hover:text-white"
+              >
                 <MapPin size={15} strokeWidth={2} aria-hidden="true" />
                 {company.street}, {company.postalCode} {company.city}
-              </p>
+              </a>
+            </div>
+
+            {/*
+              Odkazy na profily — ten istý Google profil a Facebook ako v
+              `sameAs` schémy. Návštevník tu nájde recenzie a Google vidí
+              prepojenie aj v obsahu, nielen v dátach.
+            */}
+            <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              <a
+                href={company.mapa}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-white/70 underline decoration-white/20 underline-offset-4 transition-colors duration-[var(--d-micro)] hover:text-white hover:decoration-accent"
+              >
+                Google profil a recenzie
+              </a>
+              <a
+                href={company.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-white/70 underline decoration-white/20 underline-offset-4 transition-colors duration-[var(--d-micro)] hover:text-white hover:decoration-accent"
+              >
+                Facebook
+              </a>
             </div>
           </div>
 
@@ -118,7 +147,8 @@ export default function Footer() {
 
         <div className="mt-14 flex flex-col gap-3 border-t border-line-dark pt-7 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {company.name} Všetky práva vyhradené.
+            © {new Date().getFullYear()} {company.name} Všetky práva vyhradené. IČO{" "}
+            {company.ico}, DIČ {company.dic}, IČ DPH {company.icDph}.
           </p>
           <p>
             Web navrhol a vytvoril{" "}

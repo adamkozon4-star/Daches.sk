@@ -13,15 +13,28 @@ export const company = {
   phone: "0907 481 919",
   phoneHref: "tel:+421907481919",
   email: "dachessro@gmail.com",
-  street: "1041/16",
+  // Presne podľa obchodného registra (FinStat, 25. 10. 2026). Adresa,
+  // telefón a názov musia byť rovnaké na webe, v Google profile aj na
+  // Facebooku — Google ich porovnáva.
+  street: "Kutina 1041/16",
   city: "Hruštín",
   postalCode: "029 52",
   region: "Žilinský kraj",
   country: "SK",
-  lat: 49.3656,
-  lng: 19.3667,
+  // Súradnice špendlíka Google profilu (pôvodné boli o ~4 km vedľa).
+  lat: 49.3314,
+  lng: 19.3618,
   url: "https://daches.sk",
   opening: "Pondelok – piatok, 7:00 – 17:00",
+  ico: "54423198",
+  dic: "2121662719",
+  icDph: "SK2121662719",
+  /**
+   * Google profil cez CID — stabilný odkaz, nezmení sa ani pri úprave
+   * názvu či adresy v profile (na rozdiel od odkazov share.google).
+   */
+  mapa: "https://maps.google.com/?cid=4021083577403639388",
+  facebook: "https://www.facebook.com/p/Daches-sro-100063743576222/",
 } as const;
 
 /** Obce, kde firma reálne realizuje — menovité obce sú silnejší lokálny signál než súradnice. */

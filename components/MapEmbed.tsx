@@ -6,7 +6,8 @@ import { company } from "@/lib/content";
 
 const query = `${company.name}, ${company.street}, ${company.postalCode} ${company.city}`;
 const embedSrc = `https://www.google.com/maps?q=${encodeURIComponent(query)}&hl=sk&z=13&output=embed`;
-const linkSrc = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+// Odkaz rovno na Google profil (recenzie, trasa), nie na vyhľadávanie adresy.
+const linkSrc = company.mapa;
 
 /**
  * Mapa sa načíta až po kliknutí.

@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 /**
  * ⚠️ Vzorový text pripravený pre bežnú prax malej stavebnej firmy.
- * Pred spustením ho nechajte skontrolovať klientom — doplniť treba IČO
- * a overiť, ktoré nástroje firma reálne používa.
+ * Pred spustením ho nechajte skontrolovať klientom — overiť, ktoré
+ * nástroje firma reálne používa.
  */
 export default function Page() {
   return (
@@ -29,6 +29,8 @@ export default function Page() {
         <p>
           {company.name}, {company.street}, {company.postalCode} {company.city},
           Slovenská republika.
+          <br />
+          IČO: {company.ico}, DIČ: {company.dic}, IČ DPH: {company.icDph}
           <br />
           Telefón: <a href={company.phoneHref}>{company.phone}</a>
           <br />
