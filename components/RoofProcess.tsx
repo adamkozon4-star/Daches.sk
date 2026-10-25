@@ -89,7 +89,7 @@ export default function RoofProcess() {
 
                 return (
                   <article
-                    className={`grid h-full grid-rows-[auto_minmax(0,1fr)] gap-6 overflow-clip rounded-panel border p-5 shadow-[0_-12px_40px_-16px_rgba(0,0,0,0.5)] sm:p-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1 lg:gap-12 lg:p-10 ${
+                    className={`grid h-full ${finale ? "grid-rows-1" : "grid-rows-[auto_minmax(0,1fr)]"} gap-6 overflow-clip rounded-panel border p-5 shadow-[0_-12px_40px_-16px_rgba(0,0,0,0.5)] sm:p-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1 lg:gap-12 lg:p-10 ${
                       finale ? "border-dark/10 bg-accent" : "border-white/10 bg-dark-2"
                     }`}
                   >
@@ -129,7 +129,10 @@ export default function RoofProcess() {
                       </p>
 
                       {finale ? (
-                        <div className="mt-6 border-t border-dark/15 pt-6 lg:mt-auto lg:pt-8">
+                        <>
+                        {/* Rozpera: výzva sa pritlačí k spodku karty, no od textu ostane aspoň 1,5 rem. */}
+                        <div aria-hidden="true" className="min-h-6 flex-1" />
+                        <div className="border-t border-dark/15 pt-6 lg:pt-8">
                           <p className="max-w-[40ch] text-sm leading-relaxed text-dark/75">
                             {roofProcess.ctaPopis}
                           </p>
@@ -154,11 +157,18 @@ export default function RoofProcess() {
                             </Link>
                           </div>
                         </div>
+                        </>
                       ) : null}
                     </div>
 
+                    {/*
+                      Vo finále je fotka len od lg. Na iPhone je karta nízka
+                      (Safari počíta výšku okna bez lišty, ~460 px) a po texte
+                      s výzvou z fotky zostal len prúžok. Hotovú strechu
+                      zákazník práve videl v posuvníku aj v krokoch vyššie.
+                    */}
                     <div
-                      className={`grid min-h-0 gap-3 ${
+                      className={`min-h-0 gap-3 ${finale ? "hidden lg:grid" : "grid"} ${
                         step.photos.length > 1 ? "grid-cols-2" : ""
                       }`}
                     >
