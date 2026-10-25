@@ -77,7 +77,8 @@ načíta až po kliknutí, písmo self-hostované s dvoma váhami.
   a pri nových stránkach „Request indexing". Google IndexNow nepodporuje.
 - **Bing, Seznam, Yandex (a cez Bing ChatGPT/Copilot):** IndexNow —
   `node scripts/indexnow.mjs` (celá sitemap) alebo
-  `node scripts/indexnow.mjs /radca/novy-clanok` (len vybrané).
+  `node scripts/indexnow.mjs https://daches.sk/radca/novy-clanok` (len vybrané,
+  plná adresa — Git Bash na Windows prekladá `/cesta` na cestu k súboru).
   Spúšťať po zmene obsahu, nie pri každom nasadení. Overovací kľúč je
   v `public/<kľúč>.txt` a je verejný zámerne.
 

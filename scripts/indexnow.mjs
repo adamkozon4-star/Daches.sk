@@ -18,7 +18,11 @@
  * berú ako šum.
  *
  *   node scripts/indexnow.mjs                 všetky adresy zo sitemap
- *   node scripts/indexnow.mjs /radca /kalkulator   len vybrané
+ *   node scripts/indexnow.mjs https://daches.sk/radca   len vybrané
+ *
+ * Pri vybraných adresách píš plnú adresu. Git Bash na Windows prekladá
+ * argument začínajúci lomkou na cestu k súboru (`/radca` → `C:/Program
+ * Files/Git/radca`) a IndexNow ho odmietne s HTTP 422.
  */
 
 const HOST = "daches.sk";
