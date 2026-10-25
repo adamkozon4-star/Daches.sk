@@ -17,10 +17,10 @@ import { roofProcess } from "@/lib/content";
  *
  * ── Pohyb ───────────────────────────────────────────────────────────────
  * Posuvník predtým/potom (jediný klientský kúsok, `PredPo`) a „balíček
- * kariet": krok stojí, spod neho vykúka ďalší, horná karta sa preklopí
- * dozadu a odkryje nasledujúcu. Mechanika aj farby sú v CSS — sekcia 6.14
- * v `globals.css`. Bez podpory scroll-driven animácií karty len odídu hore
- * bez preklopenia; lepenie funguje všade.
+ * kariet": krok stojí, ďalšia karta ho zhora prekryje, predchádzajúce
+ * ustúpia a vykúkajú len ich okraje. Mechanika je v CSS — sekcia 6.14
+ * v `globals.css`. Bez podpory scroll-driven animácií karty neustupujú,
+ * lepenie a prekrývanie funguje všade.
  *
  * ⚠️ Sekcia má `overflow-clip`, NIE `overflow-hidden` — hidden by z nej
  * urobil scroll kontajner a karty by sa prestali lepiť.
@@ -51,32 +51,50 @@ export default function RoofProcess() {
         </Reveal>
 
         {/*
-          Balíček kariet. `isolate` drží z-indexy kariet vnútri sekcie —
-          inak by sa horná karta pri odchode dostala nad hlavičku webu.
+          Balíček kariet — mechanika v `globals.css`, sekcia 6.14.
+
+          Inline štýly sú tie, ktoré sa líšia podľa karty: poradie (`--i`),
+          z-index a mená časových osí. Karta ustupuje podľa príchodu
+          NASLEDUJÚCEJ karty — preto jej `animationTimeline` ukazuje na meno
+          ďalšej a `<ol>` cez `timelineScope` sprístupní mená všetkým.
+          `isolate` drží z-indexy vnútri sekcie, pod hlavičkou webu.
         */}
-        <ol className="priebeh-stoh relative isolate mt-16 lg:mt-24">
+        <ol
+          className="priebeh-stoh relative isolate mt-16 lg:mt-24"
+          style={{
+            timelineScope: roofProcess.steps.map((_, i) => `--priebeh-${i}`).join(", "),
+          } as React.CSSProperties}
+        >
           {roofProcess.steps.map((step, i) => (
             <li
               key={step.number}
               className="priebeh-krok"
-              style={{ zIndex: roofProcess.steps.length - i }}
+              style={
+                {
+                  "--i": i,
+                  zIndex: i + 1,
+                  viewTimelineName: `--priebeh-${i}`,
+                  animationTimeline:
+                    i < roofProcess.steps.length - 1 ? `--priebeh-${i + 1}` : undefined,
+                } as React.CSSProperties
+              }
             >
-              <article className="priebeh-karta grid grid-rows-[auto_minmax(0,1fr)] gap-6 overflow-clip rounded-panel p-5 sm:p-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1 lg:gap-12 lg:p-10">
-                <div className="priebeh-karta-text flex flex-col">
+              <article className="grid h-full grid-rows-[auto_minmax(0,1fr)] gap-6 overflow-clip rounded-panel border border-white/10 bg-dark-2 p-5 shadow-[0_-12px_40px_-16px_rgba(0,0,0,0.5)] sm:p-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1 lg:gap-12 lg:p-10">
+                <div className="flex flex-col">
                   <div className="flex items-start justify-between gap-4">
-                    <p className="text-eyebrow uppercase">
+                    <p className="text-eyebrow uppercase text-accent">
                       Krok {step.number} z {pocet}
                     </p>
-                    <span aria-hidden="true" className="tabular text-sm font-semibold">
+                    <span aria-hidden="true" className="tabular text-sm font-semibold text-white/40">
                       ({step.number})
                     </span>
                   </div>
 
-                  <h3 className="text-h2 mt-4 text-balance text-[color:var(--k-fg)] lg:mt-8">
+                  <h3 className="text-h2 mt-4 text-balance text-white lg:mt-8">
                     {step.title}
                   </h3>
 
-                  <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed md:text-base lg:mt-6">
+                  <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-white/65 md:text-base lg:mt-6">
                     {step.text}
                   </p>
                 </div>

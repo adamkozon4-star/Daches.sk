@@ -599,8 +599,8 @@ section[id] {
 
 /* ---------- 6.14 Priebeh realizácie ----------
    Posuvník predtým/potom a „balíček kariet": každý krok je karta, ktorá
-   pri scrollovaní stojí, spod nej vykúka ďalšia a horná sa potom preklopí
-   dozadu a odletí, čím odkryje nasledujúcu. Všetko CSS — jediný
+   pri scrollovaní stojí a ďalšia ju zhora prekryje; predchádzajúce karty
+   ustúpia a vykúkajú len ich okraje. Všetko CSS — jediný
    JavaScript je ťahanie posuvníka v `PredPo.tsx`.
 
    ⚠️ Scroll-driven animácie (`view()`) aj `position: sticky` sledujú
@@ -675,103 +675,54 @@ section[id] {
 /*
   Balíček kariet.
 
-  Mechanika: každá karta je `sticky` vo vlastnom `<li>`. `<li>` je o výšku
-  karty + krok scrollu vyššie než karta, takže karta stojí, kým sa
-  prescrolluje „krok". Ďalší `<li>` je záporným okrajom vtiahnutý o výšku
-  karty späť — jeho karta preto dorazí na miesto PRESNE vo chvíli, keď
-  horná začína odchádzať, a celý čas leží POD ňou (z-index klesá).
-  Kým stúpa, vykúka spod hornej karty ako pásik — to je ten „balíček".
+  Mechanika: všetky karty sú `sticky` priamo v jednom `<ol>`, takže sa
+  lepia až do jeho konca. Každá ďalšia karta má vyšší z-index a o kúsok
+  nižšiu polohu (`--i` × odsadenie) — prichádza ZHORA na predchádzajúcu
+  a úplne ju prekryje. Z predchádzajúcich kariet nad ňou vykúkajú len
+  horné okraje. Text sa tak nikdy neprekrýva.
 
-  Preklopenie riadi časová os `<li>`, nie karty: pri lepivom prvku by
-  sa jeho poloha pre časovú os nemenila tak, ako vidí oko. Rozsah
-  `cover (100% - výška karty) → cover 100%` = od chvíle, keď karta začne
-  odchádzať, po chvíľu, keď je celá nad hornou hranou (zvýšenou o hlavičku
-  cez `view-timeline-inset`).
+  (Prvá verzia mala opačné poradie — horná karta sa preklápala preč
+  a odkrývala kartu pod sebou. Počas odchodu ale dlho zakrývala nadpis
+  novej karty a spod nej presvital obsah ďalších. Tento variant to nemá.)
+
+  Ustúpenie: kým prichádza ďalšia karta, predchádzajúca sa zmenší
+  a stmavne. Riadi ho časová os PRICHÁDZAJÚCEJ karty (jej príchod do
+  obrazu). Mená časových osí a `timeline-scope` sú inline v
+  `RoofProcess.tsx`, lebo sú pre každú kartu iné.
 */
 .priebeh-stoh {
   --karta-top: calc(var(--header-h) + 1rem);
-  --karta-h: min(calc(100svh - var(--karta-top) - 1.5rem), 680px);
-  --karta-krok: 55svh;
+  --karta-odsad: 14px;
+  --karta-h: min(
+    calc(100svh - var(--karta-top) - 6 * var(--karta-odsad) - 1.5rem),
+    640px
+  );
+  padding-bottom: 12svh;
 }
 
 .priebeh-krok {
-  position: relative;
-  height: calc(var(--karta-h) + var(--karta-krok));
-  view-timeline: --priebeh-krok block;
-  view-timeline-inset: var(--karta-top) 0px;
+  position: sticky;
+  top: calc(var(--karta-top) + var(--i) * var(--karta-odsad));
+  height: var(--karta-h);
+  transform-origin: 50% 0;
 }
 
 .priebeh-krok + .priebeh-krok {
-  margin-top: calc(-1 * var(--karta-h));
+  margin-top: 28svh;
 }
 
-/* Posledná karta už nikam neodchádza — stačí jej vlastná výška. */
-.priebeh-krok:last-child {
-  height: var(--karta-h);
-}
-
-.priebeh-karta {
-  position: sticky;
-  top: var(--karta-top);
-  height: var(--karta-h);
-  transform-origin: 50% 100%;
-  background: var(--k-bg);
-  color: var(--k-fg);
-  box-shadow: 0 30px 80px -30px rgba(17, 17, 17, 0.45);
-}
-
-/*
-  Farby rozprávajú príbeh strechy: stará červená krytina → drevo
-  konštrukcie a debnenia → antracit novej krytiny → akcent pri hotovej.
-  Biely text má na každej tmavej farbe kontrast nad 7:1, tmavý na
-  svetlých nad 12:1.
-*/
-.priebeh-krok:nth-child(1) .priebeh-karta { --k-bg: #8a2e22; --k-fg: #fff; }
-.priebeh-krok:nth-child(2) .priebeh-karta { --k-bg: #5a3d24; --k-fg: #fff; }
-.priebeh-krok:nth-child(3) .priebeh-karta { --k-bg: #3a434c; --k-fg: #fff; }
-.priebeh-krok:nth-child(4) .priebeh-karta { --k-bg: #ead6b4; --k-fg: var(--p-dark); }
-.priebeh-krok:nth-child(5) .priebeh-karta { --k-bg: #24282c; --k-fg: #fff; }
-.priebeh-krok:nth-child(6) .priebeh-karta { --k-bg: var(--p-dark); --k-fg: #fff; }
-.priebeh-krok:nth-child(7) .priebeh-karta { --k-bg: var(--p-accent); --k-fg: var(--p-dark); }
-
-.priebeh-karta-text {
-  color: color-mix(in oklab, var(--k-fg) 78%, transparent);
-}
-
-@keyframes priebehKartaOdlep {
+@keyframes priebehKartaUstup {
   to {
-    transform: perspective(1600px) translateY(-8%) rotateX(34deg) scale(0.88);
-    filter: brightness(0.65);
-  }
-}
-
-/*
-  Obsah karty sa objaví až tesne pred tým, než karta dosadne. Kým stúpa
-  pod hornou kartou, vykúka z nej len farebný okraj — inak by v páse pod
-  hornou kartou presvital text a fotky ďalších krokov.
-  Karta dosadne, keď vrch `<li>` dorazí k hornej hrane (pod hlavičkou),
-  teda pri `cover (výška okna − odsadenie)`.
-*/
-@keyframes priebehKartaObsah {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
+    transform: scale(0.94);
+    filter: brightness(0.55);
   }
 }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .priebeh-karta > * {
-      animation: priebehKartaObsah linear both;
-      animation-timeline: --priebeh-krok;
-      animation-range: cover calc(100svh - var(--karta-top) - 30svh)
-        cover calc(100svh - var(--karta-top));
-    }
-
-    .priebeh-krok:not(:last-child) .priebeh-karta {
-      animation: priebehKartaOdlep linear both;
-      animation-timeline: --priebeh-krok;
-      animation-range: cover calc(100% - var(--karta-h)) cover 100%;
+    .priebeh-krok:not(:last-child) {
+      animation: priebehKartaUstup linear both;
+      animation-range: entry 0% entry 100%;
     }
   }
 }
