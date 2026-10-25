@@ -71,6 +71,12 @@ Klientský JavaScript majú len štyri komponenty: `Header`, `Gallery`, `MapEmbe
 importov → nulový CLS), hero fotka s `priority` + `fetchPriority="high"`, mapa sa
 načíta až po kliknutí, písmo self-hostované s dvoma váhami.
 
+### SEO audit
+
+`node scripts/audit-seo.mjs` prejde všetky stránky zo sitemap a skontroluje
+titulky, popisy, canonical, nadpisy, alt a štruktúrované dáta (návratový
+kód 1 = problém). Spusti po každej zmene obsahu alebo šablóny.
+
 ### Ohlasovanie vyhľadávačom
 
 - **Google:** Search Console — sitemap `https://daches.sk/sitemap.xml`
