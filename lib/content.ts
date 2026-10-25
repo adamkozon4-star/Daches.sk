@@ -363,6 +363,10 @@ export const roofProcess = {
     },
   ],
   cta: "Chcem takúto strechu",
+  // Finále v poslednej karte — výzva je priamo pri hotovej streche.
+  ctaPopis:
+    "Orientačnú cenu svojej strechy zistíte v kalkulátore za pár minút. Obhliadka je bezplatná.",
+  ctaDruhy: "Ako prebieha výmena strechy",
 } as const;
 
 /* ---------- Prečo Daches ---------- */

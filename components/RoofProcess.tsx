@@ -79,68 +79,115 @@ export default function RoofProcess() {
                 } as React.CSSProperties
               }
             >
-              <article className="grid h-full grid-rows-[auto_minmax(0,1fr)] gap-6 overflow-clip rounded-panel border border-white/10 bg-dark-2 p-5 shadow-[0_-12px_40px_-16px_rgba(0,0,0,0.5)] sm:p-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1 lg:gap-12 lg:p-10">
-                <div className="flex flex-col">
-                  <div className="flex items-start justify-between gap-4">
-                    <p className="text-eyebrow uppercase text-accent">
-                      Krok {step.number} z {pocet}
-                    </p>
-                    <span aria-hidden="true" className="tabular text-sm font-semibold text-white/40">
-                      ({step.number})
-                    </span>
-                  </div>
+              {(() => {
+                /*
+                  Posledná karta je finále: akcentová farba značky (tá istá
+                  ako hlavné tlačidlá webu) a výzva priamo pri hotovej streche.
+                  Samostatný riadok s tlačidlom pod balíčkom bol prehliadnuteľný.
+                */
+                const finale = i === roofProcess.steps.length - 1;
 
-                  <h3 className="text-h2 mt-4 text-balance text-white lg:mt-8">
-                    {step.title}
-                  </h3>
+                return (
+                  <article
+                    className={`grid h-full grid-rows-[auto_minmax(0,1fr)] gap-6 overflow-clip rounded-panel border p-5 shadow-[0_-12px_40px_-16px_rgba(0,0,0,0.5)] sm:p-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:grid-rows-1 lg:gap-12 lg:p-10 ${
+                      finale ? "border-dark/10 bg-accent" : "border-white/10 bg-dark-2"
+                    }`}
+                  >
+                    <div className="flex flex-col">
+                      <div className="flex items-start justify-between gap-4">
+                        <p
+                          className={`text-eyebrow uppercase ${
+                            finale ? "text-dark/60" : "text-accent"
+                          }`}
+                        >
+                          Krok {step.number} z {pocet}
+                        </p>
+                        <span
+                          aria-hidden="true"
+                          className={`tabular text-sm font-semibold ${
+                            finale ? "text-dark/45" : "text-white/40"
+                          }`}
+                        >
+                          ({step.number})
+                        </span>
+                      </div>
 
-                  <p className="mt-4 max-w-[46ch] text-[15px] leading-relaxed text-white/65 md:text-base lg:mt-6">
-                    {step.text}
-                  </p>
-                </div>
+                      <h3
+                        className={`text-h2 mt-4 text-balance lg:mt-8 ${
+                          finale ? "text-dark" : "text-white"
+                        }`}
+                      >
+                        {step.title}
+                      </h3>
 
-                <div
-                  className={`grid min-h-0 gap-3 ${
-                    step.photos.length > 1 ? "grid-cols-2" : ""
-                  }`}
-                >
-                  {step.photos.map((p) => (
-                    <div key={p.alt} className="relative min-h-0 overflow-clip rounded-card">
-                      <Image
-                        src={p.photo}
-                        alt={p.alt}
-                        fill
-                        loading="lazy"
-                        // ~1,5× šírky — pri presnej šírke prehliadač fotku
-                        // pri zmenšení zjemní. Viď Gallery.tsx.
-                        sizes={
-                          step.photos.length > 1
-                            ? "(min-width: 1240px) 480px, 75vw"
-                            : "(min-width: 1240px) 960px, 100vw"
-                        }
-                        quality={80}
-                        className="object-cover"
-                      />
+                      <p
+                        className={`mt-4 max-w-[46ch] text-[15px] leading-relaxed md:text-base lg:mt-6 ${
+                          finale ? "text-dark/75" : "text-white/65"
+                        }`}
+                      >
+                        {step.text}
+                      </p>
+
+                      {finale ? (
+                        <div className="mt-6 border-t border-dark/15 pt-6 lg:mt-auto lg:pt-8">
+                          <p className="max-w-[40ch] text-sm leading-relaxed text-dark/75">
+                            {roofProcess.ctaPopis}
+                          </p>
+                          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+                            <a
+                              href="/kalkulator"
+                              className="btn btn-dark btn-velke group"
+                            >
+                              {roofProcess.cta}
+                              <ArrowRight
+                                size={18}
+                                strokeWidth={2.5}
+                                aria-hidden="true"
+                                className="transition-transform duration-[var(--d-short)] group-hover:translate-x-1"
+                              />
+                            </a>
+                            <Link
+                              href="/sluzby/vymena-strechy"
+                              className="text-sm font-semibold text-dark underline decoration-dark/30 underline-offset-4 transition-colors duration-[var(--d-micro)] hover:decoration-dark"
+                            >
+                              {roofProcess.ctaDruhy}
+                            </Link>
+                          </div>
+                        </div>
+                      ) : null}
                     </div>
-                  ))}
-                </div>
-              </article>
+
+                    <div
+                      className={`grid min-h-0 gap-3 ${
+                        step.photos.length > 1 ? "grid-cols-2" : ""
+                      }`}
+                    >
+                      {step.photos.map((p) => (
+                        <div key={p.alt} className="relative min-h-0 overflow-clip rounded-card">
+                          <Image
+                            src={p.photo}
+                            alt={p.alt}
+                            fill
+                            loading="lazy"
+                            // ~1,5× šírky — pri presnej šírke prehliadač fotku
+                            // pri zmenšení zjemní. Viď Gallery.tsx.
+                            sizes={
+                              step.photos.length > 1
+                                ? "(min-width: 1240px) 480px, 75vw"
+                                : "(min-width: 1240px) 960px, 100vw"
+                            }
+                            quality={80}
+                            className="object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                );
+              })()}
             </li>
           ))}
         </ol>
-
-        <Reveal className="mt-16 flex flex-col items-start gap-5 sm:flex-row sm:items-center lg:mt-24">
-          <a href="/kalkulator" className="btn btn-dark">
-            {roofProcess.cta}
-            <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
-          </a>
-          <Link
-            href="/sluzby/vymena-strechy"
-            className="text-sm font-semibold text-dark underline decoration-line underline-offset-4 transition-colors duration-[var(--d-micro)] hover:decoration-accent"
-          >
-            Ako prebieha výmena strechy
-          </Link>
-        </Reveal>
       </div>
     </section>
   );

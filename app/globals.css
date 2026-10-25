@@ -551,6 +551,17 @@ section[id] {
   box-shadow: var(--shadow-lift);
 }
 
+/*
+  Veľká varianta pre hlavnú výzvu sekcie. Samostatná trieda, nie
+  Tailwind `h-14 px-8`: `.btn` je mimo vrstiev Tailwindu, takže jeho
+  výška a odsadenie utility triedy prebijú.
+*/
+.btn-velke {
+  height: 3.75rem;
+  padding-inline: 2.25rem;
+  font-size: 1.0625rem;
+}
+
 /* ---------- 6.10 Jemná akcentová žiara ---------- */
 .glow-accent {
   position: absolute;
