@@ -155,13 +155,26 @@ export default function Hero() {
                     href="#realizacie"
                     className="group block overflow-hidden rounded-card border border-white/15 transition-[border-color,transform] duration-[var(--d-short)] hover:-translate-y-1 hover:border-accent/60"
                   >
+                    {/*
+                      `sizes` nie je šírka rámčeka, ale šírka fotky po orezaní.
+
+                      Fotky sú na šírku (4:3) a rámček štvorcový, takže
+                      `object-cover` orezáva boky a fotku zväčšuje podľa
+                      výšky. Pôvodne `sizes="96px"`: prehliadač stiahol 96 px
+                      širokú verziu — teda len 72 px vysokú — a natiahol ju
+                      na 86 px. Náhľady boli viditeľne rozmazané.
+
+                      Potrebná šírka = výška rámčeka × 4/3: 86 × 1,33 ≈ 115 px
+                      na desktope, 64 × 1,33 ≈ 85 px na mobile. Zaokrúhlené
+                      nahor; prehliadač si k tomu pripočíta hustotu displeja.
+                    */}
                     <Image
                       src={item.photo}
                       alt={item.alt}
                       width={96}
                       height={96}
-                      sizes="96px"
-                      quality={70}
+                      sizes="(min-width: 1024px) 120px, 90px"
+                      quality={80}
                       className="h-16 w-16 object-cover transition-transform duration-[var(--d-short)] group-hover:scale-105 lg:h-[86px] lg:w-[86px]"
                     />
                   </a>
