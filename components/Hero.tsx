@@ -165,16 +165,21 @@ export default function Hero() {
                       na 86 px. Náhľady boli viditeľne rozmazané.
 
                       Potrebná šírka = výška rámčeka × 4/3: 86 × 1,33 ≈ 115 px
-                      na desktope, 64 × 1,33 ≈ 85 px na mobile. Zaokrúhlené
-                      nahor; prehliadač si k tomu pripočíta hustotu displeja.
+                      na desktope, 64 × 1,33 ≈ 85 px na mobile.
+
+                      Druhý krok: ani presná veľkosť nestačila — pri 128 px
+                      AVIF drobné detaily zjemní a náhľady pôsobili mäkko.
+                      Preto dvojnásobok: prehliadač 256 px fotku zmenší,
+                      a zmenšovaná fotka je ostrejšia než fotka v natívnej
+                      veľkosti. Štyri náhľady tým narastú o pár kB.
                     */}
                     <Image
                       src={item.photo}
                       alt={item.alt}
                       width={96}
                       height={96}
-                      sizes="(min-width: 1024px) 120px, 90px"
-                      quality={80}
+                      sizes="(min-width: 1024px) 240px, 180px"
+                      quality={85}
                       className="h-16 w-16 object-cover transition-transform duration-[var(--d-short)] group-hover:scale-105 lg:h-[86px] lg:w-[86px]"
                     />
                   </a>
