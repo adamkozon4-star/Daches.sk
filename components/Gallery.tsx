@@ -128,7 +128,14 @@ export default function Gallery() {
           </div>
         </div>
 
-        <ul className="mt-12 grid auto-rows-[minmax(0,1fr)] gap-4 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
+        {/*
+          Bez `auto-rows-[minmax(0,1fr)]`: to robilo všetky riadky rovnako
+          vysoké podľa najvyššieho (široká fotka 16:9). Užšia fotka 4:3 vedľa
+          nej dlaždicu nevyplnila a pod ňou presvital prechod popisu ako sivý
+          pás. Teraz má každý riadok výšku podľa svojho obsahu a užšia fotka
+          sa v riadku so širokou natiahne (`h-full` + `object-cover`).
+        */}
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
           {visible.map((item, i) => (
             <li
               key={item.id}
@@ -150,7 +157,7 @@ export default function Gallery() {
                 aria-label={`Zväčšiť fotku: ${item.caption}`}
               >
                 <div
-                  className={`relative w-full ${
+                  className={`relative h-full w-full ${
                     item.wide ? "aspect-[16/9]" : "aspect-[4/3]"
                   }`}
                 >
@@ -159,10 +166,23 @@ export default function Gallery() {
                     alt={item.alt}
                     fill
                     loading="lazy"
+                    /*
+                      Zámerne ~1,5× väčšie než dlaždica.
+
+                      Pôvodne presné šírky (778 px → prehliadač si vzal 828).
+                      Zmenšenie v pomere 1,06 prehliadač robí prepočtom, ktorý
+                      fotku zjemní — galéria pôsobila rozmazane, hoci zdroj
+                      mal dosť pixelov. Pri zmenšení ~1,5× je výsledok ostrý.
+
+                      Užšia fotka v riadku so širokou je 381 × 438 px a
+                      `object-cover` ju zväčšuje podľa výšky: potrebná šírka
+                      je 438 × 4/3 ≈ 584 px, × 1,5 ≈ 880 px. Mobil to nepotrebuje,
+                      tam vyššiu šírku dodá hustota displeja.
+                    */
                     sizes={
                       item.wide
-                        ? "(min-width: 1240px) 778px, (min-width: 1024px) calc(66vw - 48px), 100vw"
-                        : "(min-width: 1240px) 381px, (min-width: 1024px) calc(33vw - 32px), (min-width: 640px) calc(50vw - 40px), 100vw"
+                        ? "(min-width: 1240px) 1170px, 100vw"
+                        : "(min-width: 1240px) 880px, (min-width: 640px) 75vw, 100vw"
                     }
                     quality={80}
                     className="object-cover transition-transform duration-[var(--d-long)] group-hover:scale-[1.04]"

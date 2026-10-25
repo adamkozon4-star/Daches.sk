@@ -48,7 +48,9 @@ export default function RoofProcess() {
                   src={item.photo}
                   alt={item.alt}
                   loading="lazy"
-                  sizes="(min-width: 1240px) 580px, (min-width: 640px) calc(50vw - 40px), 100vw"
+                  // ~1,5× šírky dlaždice — pri presnej šírke (580 → 640 px,
+                  // pomer 1,1) prehliadač fotku pri zmenšení zjemní. Viď Gallery.tsx.
+                  sizes="(min-width: 1240px) 880px, (min-width: 640px) 75vw, 100vw"
                   quality={80}
                   className="aspect-[4/3] w-full object-cover"
                 />
@@ -120,7 +122,7 @@ export default function RoofProcess() {
                           sizes={
                             step.photos.length > 1
                               ? "(min-width: 1240px) 270px, (min-width: 1024px) calc(25vw - 40px), (min-width: 640px) calc(50vw - 40px), 100vw"
-                              : "(min-width: 1240px) 556px, (min-width: 1024px) calc(50vw - 64px), 100vw"
+                              : "(min-width: 1240px) 840px, (min-width: 1024px) 75vw, 100vw"
                           }
                           quality={80}
                           className={`w-full object-cover ${
