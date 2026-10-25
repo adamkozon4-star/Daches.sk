@@ -56,14 +56,22 @@ export default function PredPo({ pred, po }: { pred: Fotka; po: Fotka }) {
           quality={80}
           className="object-cover"
         />
+
+        {/*
+          Štítky sú orezané spolu so svojou fotkou. Pôvodne boli nad oboma
+          vrstvami a na mobile bol „Po realizácii" vidieť celý, aj keď pod
+          ním ešte bola fotka pred výmenou — čiara ho len pretínala.
+        */}
+        <span className="text-eyebrow pointer-events-none absolute left-4 top-4 rounded-card bg-dark/80 px-3 py-1.5 uppercase text-white backdrop-blur-sm md:left-6 md:top-6">
+          {pred.label}
+        </span>
       </div>
 
-      <span className="text-eyebrow pointer-events-none absolute left-4 top-4 rounded-card bg-dark/80 px-3 py-1.5 uppercase text-white backdrop-blur-sm md:left-6 md:top-6">
-        {pred.label}
-      </span>
-      <span className="text-eyebrow pointer-events-none absolute right-4 top-4 rounded-card bg-accent px-3 py-1.5 uppercase text-dark md:right-6 md:top-6">
-        {po.label}
-      </span>
+      <div className="pred-po-spodok pointer-events-none absolute inset-0">
+        <span className="text-eyebrow absolute right-4 top-4 rounded-card bg-accent px-3 py-1.5 uppercase text-dark md:right-6 md:top-6">
+          {po.label}
+        </span>
+      </div>
 
       <div aria-hidden="true" className="pred-po-ciara pointer-events-none absolute inset-y-0">
         <span className="pred-po-ruka grid h-14 w-14 place-items-center rounded-full bg-accent text-dark shadow-[var(--shadow-panel)]">

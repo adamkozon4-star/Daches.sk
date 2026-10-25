@@ -629,6 +629,11 @@ section[id] {
   clip-path: inset(0 calc(100% - var(--pos)) 0 0);
 }
 
+/* Štítok „po realizácii" — orezaný zrkadlovo, viditeľný len vpravo od čiary. */
+.pred-po-spodok {
+  clip-path: inset(0 0 0 var(--pos));
+}
+
 .pred-po-ciara {
   left: var(--pos);
   width: 2px;
