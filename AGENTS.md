@@ -36,8 +36,9 @@ inak Next 16 odmietne každý `<Image quality={...}>` s HTTP 400.
 - Komponenty sú server komponenty. `"use client"` majú len `Header`, `Gallery`,
   `MapEmbed`, `MotionRoot`, `PredPo` (ťahanie posuvníka predtým/potom) a formuláre
   (`DopytForm`, kalkulátor) — pred pridaním ďalšieho zváž, či to naozaj treba.
-- Scroll-driven animácie (`animation-timeline: view()`) nefungujú vnútri prvku
-  s `overflow: hidden` — ten je scroll kontajner a animácia stojí. Použi
+- Scroll-driven animácie (`animation-timeline: view()`) ani `position: sticky`
+  nefungujú vnútri prvku s `overflow: hidden` — ten je scroll kontajner,
+  animácia stojí a karty v „Priebehu realizácie" sa prestanú lepiť. Použi
   `overflow-clip`. Detaily v `globals.css`, sekcia 6.14.
 - Nepridávaj animačné knižnice. Všetko sa dá CSS-om a jedným IntersectionObserverom.
 - Nikdy nevymýšľaj recenzie, hodnotenia, počty realizácií ani roky praxe.

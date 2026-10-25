@@ -598,14 +598,15 @@ section[id] {
 }
 
 /* ---------- 6.14 Priebeh realizácie ----------
-   Posuvník predtým/potom, os, ktorá sa vypĺňa podľa scrollu, kroky, ktoré
-   sa na nej rozsvietia, a fotky, ktoré sa pri príchode do obrazu odzoomujú.
-   Všetko CSS — jediný JavaScript je ťahanie posuvníka v `PredPo.tsx`.
+   Posuvník predtým/potom a „balíček kariet": každý krok je karta, ktorá
+   pri scrollovaní stojí, spod nej vykúka ďalšia a horná sa potom preklopí
+   dozadu a odletí, čím odkryje nasledujúcu. Všetko CSS — jediný
+   JavaScript je ťahanie posuvníka v `PredPo.tsx`.
 
-   ⚠️ Scroll-driven animácie (`view()`) sledujú NAJBLIŽŠÍ scroll kontajner.
-   `overflow: hidden` z prvku taký kontajner robí — animácia vnútri potom
-   sleduje jeho nehybný scroll a stojí. Preto má sekcia `overflow-clip`
-   a fotky berú časovú os od obalu cez `view-timeline-name`, nie od seba.
+   ⚠️ Scroll-driven animácie (`view()`) aj `position: sticky` sledujú
+   NAJBLIŽŠÍ scroll kontajner. `overflow: hidden` z prvku taký kontajner
+   robí — karty by sa prestali lepiť a animácie by stáli. Preto má sekcia
+   `overflow-clip`.
 */
 @property --pos {
   syntax: "<percentage>";
@@ -671,108 +672,107 @@ section[id] {
   }
 }
 
-/* Veľké číslo kroku — obrys, ktorý sa po odhalení zaleje akcentom zdola. */
-.priebeh-cislo {
-  font-size: clamp(4rem, 9vw, 7rem);
-  line-height: 0.85;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--p-dark);
-  background: linear-gradient(to top, var(--p-accent) 50%, transparent 50%);
-  background-size: 100% 200%;
-  background-position: 0 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  transition: background-position 1100ms var(--e-out);
-  transition-delay: 250ms;
+/*
+  Balíček kariet.
+
+  Mechanika: každá karta je `sticky` vo vlastnom `<li>`. `<li>` je o výšku
+  karty + krok scrollu vyššie než karta, takže karta stojí, kým sa
+  prescrolluje „krok". Ďalší `<li>` je záporným okrajom vtiahnutý o výšku
+  karty späť — jeho karta preto dorazí na miesto PRESNE vo chvíli, keď
+  horná začína odchádzať, a celý čas leží POD ňou (z-index klesá).
+  Kým stúpa, vykúka spod hornej karty ako pásik — to je ten „balíček".
+
+  Preklopenie riadi časová os `<li>`, nie karty: pri lepivom prvku by
+  sa jeho poloha pre časovú os nemenila tak, ako vidí oko. Rozsah
+  `cover (100% - výška karty) → cover 100%` = od chvíle, keď karta začne
+  odchádzať, po chvíľu, keď je celá nad hornou hranou (zvýšenou o hlavičku
+  cez `view-timeline-inset`).
+*/
+.priebeh-stoh {
+  --karta-top: calc(var(--header-h) + 1rem);
+  --karta-h: min(calc(100svh - var(--karta-top) - 1.5rem), 680px);
+  --karta-krok: 55svh;
 }
 
-[data-revealed] .priebeh-cislo {
-  background-position: 0 100%;
+.priebeh-krok {
+  position: relative;
+  height: calc(var(--karta-h) + var(--karta-krok));
+  view-timeline: --priebeh-krok block;
+  view-timeline-inset: var(--karta-top) 0px;
 }
 
-/* Os: sivá koľaj, tmavá výplň rastie so scrollom až po stred obrazovky. */
-.priebeh-os-vypln {
-  transform-origin: top;
-  transform: scaleY(0);
+.priebeh-krok + .priebeh-krok {
+  margin-top: calc(-1 * var(--karta-h));
 }
 
-.priebeh-bod {
-  transition: none;
+/* Posledná karta už nikam neodchádza — stačí jej vlastná výška. */
+.priebeh-krok:last-child {
+  height: var(--karta-h);
 }
 
-@keyframes priebehBodZapni {
+.priebeh-karta {
+  position: sticky;
+  top: var(--karta-top);
+  height: var(--karta-h);
+  transform-origin: 50% 100%;
+  background: var(--k-bg);
+  color: var(--k-fg);
+  box-shadow: 0 30px 80px -30px rgba(17, 17, 17, 0.45);
+}
+
+/*
+  Farby rozprávajú príbeh strechy: stará červená krytina → drevo
+  konštrukcie a debnenia → antracit novej krytiny → akcent pri hotovej.
+  Biely text má na každej tmavej farbe kontrast nad 7:1, tmavý na
+  svetlých nad 12:1.
+*/
+.priebeh-krok:nth-child(1) .priebeh-karta { --k-bg: #8a2e22; --k-fg: #fff; }
+.priebeh-krok:nth-child(2) .priebeh-karta { --k-bg: #5a3d24; --k-fg: #fff; }
+.priebeh-krok:nth-child(3) .priebeh-karta { --k-bg: #3a434c; --k-fg: #fff; }
+.priebeh-krok:nth-child(4) .priebeh-karta { --k-bg: #ead6b4; --k-fg: var(--p-dark); }
+.priebeh-krok:nth-child(5) .priebeh-karta { --k-bg: #24282c; --k-fg: #fff; }
+.priebeh-krok:nth-child(6) .priebeh-karta { --k-bg: var(--p-dark); --k-fg: #fff; }
+.priebeh-krok:nth-child(7) .priebeh-karta { --k-bg: var(--p-accent); --k-fg: var(--p-dark); }
+
+.priebeh-karta-text {
+  color: color-mix(in oklab, var(--k-fg) 78%, transparent);
+}
+
+@keyframes priebehKartaOdlep {
   to {
-    background: var(--p-accent);
-    border-color: var(--p-dark);
-    transform: scale(1.35);
-    box-shadow: 0 0 0 6px rgba(223, 255, 79, 0.35);
+    transform: perspective(1600px) translateY(-8%) rotateX(34deg) scale(0.88);
+    filter: brightness(0.65);
   }
 }
 
-@keyframes priebehFotoOdzoom {
+/*
+  Obsah karty sa objaví až tesne pred tým, než karta dosadne. Kým stúpa
+  pod hornou kartou, vykúka z nej len farebný okraj — inak by v páse pod
+  hornou kartou presvital text a fotky ďalších krokov.
+  Karta dosadne, keď vrch `<li>` dorazí k hornej hrane (pod hlavičkou),
+  teda pri `cover (výška okna − odsadenie)`.
+*/
+@keyframes priebehKartaObsah {
   from {
-    transform: scale(1.18);
+    opacity: 0;
+    transform: translateY(24px);
   }
-  to {
-    transform: scale(1);
-  }
-}
-
-.priebeh-foto {
-  view-timeline-name: --priebeh-foto;
 }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /*
-      Výplň sleduje stred obrazovky: začne, keď je začiatok osi v strede,
-      a skončí, keď je tam jej koniec. Rozsah `cover` začína, keď prvok
-      vstupuje zdola, preto posun o pol výšky okna na oboch koncoch.
-    */
-    .priebeh-os-vypln {
-      animation: lineGrow linear both;
-      animation-timeline: view();
-      animation-range: cover 50vh cover calc(100% - 50vh);
+    .priebeh-karta > * {
+      animation: priebehKartaObsah linear both;
+      animation-timeline: --priebeh-krok;
+      animation-range: cover calc(100svh - var(--karta-top) - 30svh)
+        cover calc(100svh - var(--karta-top));
     }
 
-    /* Bod sa rozsvieti presne vtedy, keď ho výplň dosiahne — v strede okna. */
-    .priebeh-bod {
-      animation: priebehBodZapni linear both;
-      animation-timeline: view();
-      animation-range: cover 46% cover 54%;
+    .priebeh-krok:not(:last-child) .priebeh-karta {
+      animation: priebehKartaOdlep linear both;
+      animation-timeline: --priebeh-krok;
+      animation-range: cover calc(100% - var(--karta-h)) cover 100%;
     }
-
-    .priebeh-foto img {
-      animation: priebehFotoOdzoom linear both;
-      animation-timeline: --priebeh-foto;
-      animation-range: entry 0% cover 45%;
-    }
-  }
-}
-
-/* Bez podpory scroll-driven animácií alebo pri obmedzenom pohybe: os plná,
-   body rozsvietené — inak by zostali prázdne. */
-@media (prefers-reduced-motion: reduce) {
-  .priebeh-os-vypln {
-    transform: none;
-  }
-
-  .priebeh-bod {
-    background: var(--p-accent);
-    border-color: var(--p-dark);
-  }
-}
-
-@supports not (animation-timeline: view()) {
-  .priebeh-os-vypln {
-    transform: none;
-  }
-
-  .priebeh-bod {
-    background: var(--p-accent);
-    border-color: var(--p-dark);
   }
 }
 
