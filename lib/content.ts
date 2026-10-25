@@ -461,34 +461,21 @@ export const contact = {
 } as const;
 
 /* ---------- Kalkulácia (sekcia zostáva, wizard rieši samostatná etapa) ---------- */
+/**
+ * Sekcia Kalkulácia na úvodnej. Prvú otázku kalkulátora kladie priamo
+ * sekcia (voľby sú z `typyProjektu` v `lib/kalkulator/moznosti.ts`) —
+ * jedno kliknutie otvorí kalkulátor s vybranou odpoveďou.
+ */
 export const calculator = {
   eyebrow: "Kalkulácia",
-  titleBefore: "Zistite orientačnú cenu vašej ",
-  titleMark: "strechy",
-  lead: "Odpovedzte na pár otázok o vašom projekte. Za necelú minútu získate orientačný rozsah ceny a my sa vám ozveme s presným návrhom.",
-  note: "Bez registrácie · Nezáväzne · Trvá cca 60 sekúnd",
-  steps: [
-    {
-      number: "1",
-      title: "Vyplníte kalkuláciu",
-      text: "Zadáte základné údaje o streche a projekte.",
-    },
-    {
-      number: "2",
-      title: "Ozveme sa vám",
-      text: "Prejdeme si zadanie a doladíme detaily.",
-    },
-    {
-      number: "3",
-      title: "Obhliadka na mieste",
-      text: "Prídeme sa pozrieť na stavbu a zameriame ju.",
-    },
-    {
-      number: "4",
-      title: "Presná cenová ponuka",
-      text: "Dostanete konkrétnu ponuku a dohodneme termín.",
-    },
-  ],
+  titleBefore: "Koľko bude stáť vaša ",
+  titleMark: "strecha",
+  titleAfter: "?",
+  lead: "Vyberte, čo potrebujete. Orientačnú cenu s rozpisom na materiál a prácu máte do minúty.",
+  vyhody: ["Bez registrácie", "Do minúty", "Nezáväzne"],
+  otazka: "Čo pre vás máme urobiť?",
+  poznamka: "Záväznú cenu povieme po bezplatnej obhliadke.",
+  zavolat: "Radšej zavoláte?",
 } as const;
 
 /* ---------- Záverečné CTA ---------- */

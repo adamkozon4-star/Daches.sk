@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import Kalkulator from "@/components/kalkulator/Kalkulator";
+import { Suspense } from "react";
+import Kalkulator, { KalkulatorZAdresy } from "@/components/kalkulator/Kalkulator";
 import { calculator, company } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -47,7 +48,14 @@ export default function Page() {
         </header>
 
         <div className="mt-12 rounded-panel border border-line bg-white p-6 shadow-[var(--shadow-card)] md:p-10">
-          <Kalkulator />
+          {/*
+            Predvolený projekt z adresy (?projekt=…) — klik na voľbu v sekcii
+            Kalkulácia na úvodnej. Fallback je ten istý kalkulátor bez
+            predvoľby, takže zo servera príde plnohodnotné HTML.
+          */}
+          <Suspense fallback={<Kalkulator />}>
+            <KalkulatorZAdresy />
+          </Suspense>
         </div>
 
         <p className="mt-8 max-w-[68ch] text-xs leading-relaxed text-muted">

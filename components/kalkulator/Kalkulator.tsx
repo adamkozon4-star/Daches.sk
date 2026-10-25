@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Phone, RotateCcw, Ruler } from "lucide-react";
 import { company } from "@/lib/content";
 import {
@@ -64,10 +65,37 @@ const vychodzi: Stav = {
   vlastneVymery: null,
 };
 
-export default function Kalkulator() {
-  const [typProjektu, setTypProjektu] = useState<TypProjektu | null>(null);
+/**
+ * Kalkulátor s predvoleným projektom z adresy (`/kalkulator?projekt=krov`).
+ *
+ * Prvú otázku kalkulátora kladie už sekcia na úvodnej stránke — kto tam
+ * klikne na „Nový krov", nemá ju dostať druhýkrát.
+ *
+ * `useSearchParams` na statickej stránke vyžaduje `<Suspense>`: server
+ * adresu s parametrom nevidí, takže táto časť sa vykreslí až v prehliadači.
+ * Ako `fallback` slúži `<Kalkulator />` bez parametra (výber projektu) —
+ * ten je v HTML zo servera a stránka tak nič nestráca. Viď
+ * `app/kalkulator/page.tsx`.
+ */
+export function KalkulatorZAdresy() {
+  const id = useSearchParams().get("projekt");
+  const projekt = typyProjektu.find((t) => t.id === id)?.id ?? null;
+
+  return <Kalkulator key={projekt ?? "vyber"} pociatocnyProjekt={projekt} />;
+}
+
+export default function Kalkulator({
+  pociatocnyProjekt = null,
+}: {
+  pociatocnyProjekt?: TypProjektu | null;
+}) {
+  const [typProjektu, setTypProjektu] = useState<TypProjektu | null>(pociatocnyProjekt);
   const [krok, setKrok] = useState(0);
-  const [stav, setStav] = useState<Stav>(vychodzi);
+  const [stav, setStav] = useState<Stav>(() =>
+    pociatocnyProjekt
+      ? { ...vychodzi, doplnky: [...predvoleneDoplnky[pociatocnyProjekt]] }
+      : vychodzi,
+  );
   const [chyba, setChyba] = useState<string | null>(null);
 
   const projekt = typyProjektu.find((t) => t.id === typProjektu);
