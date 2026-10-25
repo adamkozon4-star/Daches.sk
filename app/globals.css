@@ -597,6 +597,185 @@ section[id] {
   width: 24px !important;
 }
 
+/* ---------- 6.14 Priebeh realizácie ----------
+   Posuvník predtým/potom, os, ktorá sa vypĺňa podľa scrollu, kroky, ktoré
+   sa na nej rozsvietia, a fotky, ktoré sa pri príchode do obrazu odzoomujú.
+   Všetko CSS — jediný JavaScript je ťahanie posuvníka v `PredPo.tsx`.
+
+   ⚠️ Scroll-driven animácie (`view()`) sledujú NAJBLIŽŠÍ scroll kontajner.
+   `overflow: hidden` z prvku taký kontajner robí — animácia vnútri potom
+   sleduje jeho nehybný scroll a stojí. Preto má sekcia `overflow-clip`
+   a fotky berú časovú os od obalu cez `view-timeline-name`, nie od seba.
+*/
+@property --pos {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+
+.pred-po-vrch {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.pred-po-ciara {
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--p-white);
+  box-shadow: 0 0 0 1px rgba(17, 17, 17, 0.15);
+}
+
+.pred-po-ruka {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform var(--d-short) var(--e-out);
+}
+
+.pred-po:hover .pred-po-ruka {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.pred-po:has(.pred-po-vstup:focus-visible) .pred-po-ruka {
+  outline: 3px solid var(--p-white);
+  outline-offset: 3px;
+}
+
+/* Zvislé potiahnutie prstom má scrollovať stránku, nie hýbať posuvníkom. */
+.pred-po-vstup {
+  touch-action: pan-y;
+}
+
+/*
+  Naznačenie, že sa dá ťahať: raz po odhalení, kým sa posuvníka nikto
+  nedotkol. `backwards`, nie `both` — po skončení musí platiť poloha zo
+  stavu komponentu, inak by ju animácia natrvalo prebíjala.
+*/
+[data-revealed] .pred-po:not([data-dotknute]) {
+  animation: predPoNaznak 2600ms var(--e-out) 500ms 1 backwards;
+}
+
+@keyframes predPoNaznak {
+  0% {
+    --pos: 50%;
+  }
+  30% {
+    --pos: 24%;
+  }
+  65% {
+    --pos: 74%;
+  }
+  100% {
+    --pos: 50%;
+  }
+}
+
+/* Veľké číslo kroku — obrys, ktorý sa po odhalení zaleje akcentom zdola. */
+.priebeh-cislo {
+  font-size: clamp(4rem, 9vw, 7rem);
+  line-height: 0.85;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--p-dark);
+  background: linear-gradient(to top, var(--p-accent) 50%, transparent 50%);
+  background-size: 100% 200%;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: background-position 1100ms var(--e-out);
+  transition-delay: 250ms;
+}
+
+[data-revealed] .priebeh-cislo {
+  background-position: 0 100%;
+}
+
+/* Os: sivá koľaj, tmavá výplň rastie so scrollom až po stred obrazovky. */
+.priebeh-os-vypln {
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+.priebeh-bod {
+  transition: none;
+}
+
+@keyframes priebehBodZapni {
+  to {
+    background: var(--p-accent);
+    border-color: var(--p-dark);
+    transform: scale(1.35);
+    box-shadow: 0 0 0 6px rgba(223, 255, 79, 0.35);
+  }
+}
+
+@keyframes priebehFotoOdzoom {
+  from {
+    transform: scale(1.18);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.priebeh-foto {
+  view-timeline-name: --priebeh-foto;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /*
+      Výplň sleduje stred obrazovky: začne, keď je začiatok osi v strede,
+      a skončí, keď je tam jej koniec. Rozsah `cover` začína, keď prvok
+      vstupuje zdola, preto posun o pol výšky okna na oboch koncoch.
+    */
+    .priebeh-os-vypln {
+      animation: lineGrow linear both;
+      animation-timeline: view();
+      animation-range: cover 50vh cover calc(100% - 50vh);
+    }
+
+    /* Bod sa rozsvieti presne vtedy, keď ho výplň dosiahne — v strede okna. */
+    .priebeh-bod {
+      animation: priebehBodZapni linear both;
+      animation-timeline: view();
+      animation-range: cover 46% cover 54%;
+    }
+
+    .priebeh-foto img {
+      animation: priebehFotoOdzoom linear both;
+      animation-timeline: --priebeh-foto;
+      animation-range: entry 0% cover 45%;
+    }
+  }
+}
+
+/* Bez podpory scroll-driven animácií alebo pri obmedzenom pohybe: os plná,
+   body rozsvietené — inak by zostali prázdne. */
+@media (prefers-reduced-motion: reduce) {
+  .priebeh-os-vypln {
+    transform: none;
+  }
+
+  .priebeh-bod {
+    background: var(--p-accent);
+    border-color: var(--p-dark);
+  }
+}
+
+@supports not (animation-timeline: view()) {
+  .priebeh-os-vypln {
+    transform: none;
+  }
+
+  .priebeh-bod {
+    background: var(--p-accent);
+    border-color: var(--p-dark);
+  }
+}
+
 /* ============================================================
    6.13 TLAČ
    Tlačidlo „Uložiť ako PDF" v kalkulátore volá window.print(). Namiesto

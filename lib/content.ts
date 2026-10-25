@@ -263,11 +263,12 @@ export const roofProcess = {
   eyebrow: "Priebeh realizácie",
   titleBefore: "Od starej krytiny po ",
   titleMark: "hotovú strechu",
-  lead: "Výmena strešnej krytiny na rodinnom dome krok po kroku. Rovnaká strecha, rovnaký uhol — od prvého dňa po odovzdanie.",
+  lead: "Výmena strešnej krytiny na rodinnom dome krok po kroku — jedna zákazka od prvého dňa po odovzdanie. Potiahnite posuvník a porovnajte.",
+  // Pár do posuvníka: tá istá strecha pri komínoch pred výmenou a po nej.
   before: {
-    photo: procesFoto.povodnaKrytina,
+    photo: procesFoto.povodneKominy,
     label: "Predtým",
-    alt: "Pôvodná falcovaná plechová krytina s náterom pred výmenou, Orava — Daches s.r.o.",
+    alt: "Pôvodná červená plechová krytina a komíny pred výmenou strechy, Orava — Daches s.r.o.",
   },
   after: {
     photo: procesFoto.hotovaStrecha,
@@ -281,8 +282,8 @@ export const roofProcess = {
       text: "Pôvodná plechová krytina držaná pri živote nátermi. Rozhodujúce sú vždy detaily — napojenia na komíny a spoje pásov boli na konci životnosti.",
       photos: [
         {
-          photo: procesFoto.povodneKominy,
-          alt: "Pôvodné komíny s poškodeným oplechovaním pred rekonštrukciou strechy",
+          photo: procesFoto.povodnaKrytina,
+          alt: "Pôvodná falcovaná plechová krytina s náterom pred výmenou",
         },
       ],
     },
