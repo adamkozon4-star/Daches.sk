@@ -192,12 +192,12 @@ a nesprávny údaj je horší než žiadny.
 
 ## Pred spustením na ostrú doménu
 
-- [ ] **`company.url` v `lib/content.ts`** — teraz `https://daches.sk`. Riadi
+- [x] **`company.url` v `lib/content.ts`** — teraz `https://daches.sk`. Riadi
       canonical, OG, sitemap aj JSON-LD naraz.
 - [ ] **Google recenzie** — `reviews.items` je prázdne pole a zobrazí sa čestný
       stav s odkazom na Google. Vymyslené recenzie sa sem nepíšu.
-- [ ] **`sameAs` v `app/layout.tsx`** — doplniť Google Business profil a sociálne siete.
-- [ ] **IČO/DIČ** do pätky a do textu o ochrane osobných údajov.
+- [x] **`sameAs` v `app/layout.tsx`** — doplniť Google Business profil a sociálne siete.
+- [x] **IČO/DIČ** do pätky a do textu o ochrane osobných údajov.
 - [ ] **Právne texty** (`app/cookies`, `app/ochrana-osobnych-udajov`) nechať
       skontrolovať klientom — sú to pripravené vzory, nie právny audit.
 - [ ] **Overiť s klientom tvrdenia** v trust bare: či Daches robí krov aj krytinu
