@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { company } from "@/lib/content";
 import { clanky } from "@/lib/radca";
+import { realizacie } from "@/lib/realizacie";
 import { sluzby } from "@/lib/sluzby";
 
 export const dynamic = "force-static";
@@ -22,6 +23,7 @@ const zmenene = {
   sluzby: "2026-10-25",
   pravne: "2026-08-26",
   radca: "2026-10-24",
+  realizacie: "2026-11-06",
 } as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -37,6 +39,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: zmenene.sluzby,
       changeFrequency: "monthly" as const,
       priority: 0.9,
+    })),
+    {
+      url: `${company.url}/realizacie`,
+      lastModified: zmenene.realizacie,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    ...realizacie.map((r) => ({
+      url: `${company.url}/realizacie/${r.slug}`,
+      lastModified: zmenene.realizacie,
+      changeFrequency: "yearly" as const,
+      priority: 0.7,
     })),
     {
       url: `${company.url}/radca`,

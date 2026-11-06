@@ -167,6 +167,13 @@ ani `strecha Dolný Kubín` nemajú v našepkávači **jediný návrh**, kým
 tenké stránky s prehádzaným názvom obce, čo Google hodnotí ako duplicitu.
 Obce sú preto pokryté v texte úvodnej stránky a v `areaServed`.
 
+**Realizácie s obcou** (`/realizacie`, `lib/realizacie/`) sú iný prípad:
+každá je skutočná zákazka s vlastnými fotkami a popisom krokov, nie
+šablóna s vymenenou obcou. Zdroj je Facebook Daches (stav 6. 11. 2026),
+fotky v `public/images/realizacie/<slug>/`, importy generuje
+`node scripts/realizacie-fotky.mjs`. Píše sa len to, čo je v príspevku
+a na fotkách — pozri hlavičku `lib/realizacie/index.ts`.
+
 ### Čo sa do textov nesmie napísať
 
 Technické fakty o strechách áno. Tvrdenia o firme — roky praxe, počty
@@ -215,6 +222,10 @@ a nesprávny údaj je horší než žiadny.
 - [x] **Radca** (`/radca`, `lib/radca/`) — päť článkov: cena strechy, plech
       alebo škridla, povolenie, zatekanie, dotácia. Článok o dotácii má rok
       v titulku a treba ho každý rok prejsť (komentár v súbore).
+- [x] **Realizácie s obcou** — 14 zákaziek z Facebooku (`/realizacie`).
+- [ ] **Texty k realizáciám od klienta** — 2 – 3 vety ku každej zákazke (stav
+      pred, čo sa menilo, prečo) do `odseky` v `lib/realizacie/index.ts`.
+      Bez nich sú stránky len fotky s popisom krokov.
 - [ ] **Premenné prostredia vo Verceli** — `RESEND_API_KEY`, `DOPYT_ODOSIELATEL`,
       `DOPYT_PRIJEMCA`. Názvy sú v `.env.example`.
 

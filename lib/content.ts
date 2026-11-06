@@ -62,7 +62,7 @@ export const areaServed = [
  */
 export const navLinks = [
   { label: "Služby", href: "/#sluzby", submenu: true },
-  { label: "Realizácie", href: "/#realizacie", submenu: false },
+  { label: "Realizácie", href: "/realizacie", submenu: false },
   { label: "Priebeh realizácie", href: "/#priebeh", submenu: false },
   { label: "Prečo Daches", href: "/#preco-daches", submenu: false },
   { label: "Materiály", href: "/#materialy", submenu: false },

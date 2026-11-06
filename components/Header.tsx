@@ -27,7 +27,12 @@ import { sluzby } from "@/lib/sluzby";
  * niekto vedome nepridá.
  */
 const tmavyUvod = (cesta: string) =>
-  cesta === "/" || cesta.startsWith("/sluzby/") || cesta === "/radca" || cesta.startsWith("/radca/");
+  cesta === "/" ||
+  cesta.startsWith("/sluzby/") ||
+  cesta === "/radca" ||
+  cesta.startsWith("/radca/") ||
+  cesta === "/realizacie" ||
+  cesta.startsWith("/realizacie/");
 
 export default function Header() {
   const priehladna = tmavyUvod(usePathname());

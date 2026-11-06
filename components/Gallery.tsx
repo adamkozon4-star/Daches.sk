@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { gallery, galleryFilters, type GalleryFilter } from "@/lib/content";
 
 type Item = (typeof gallery)[number];
@@ -202,6 +203,14 @@ export default function Gallery() {
             </li>
           ))}
         </ul>
+
+        {/* Podstránky realizácií s obcou — z úvodnej na ne vedie len toto a menu. */}
+        <div data-reveal="up" className="mt-10 flex justify-center lg:mt-14">
+          <Link href="/realizacie" className="btn btn-dark">
+            Realizácie podľa obcí
+            <ArrowRight size={17} strokeWidth={2.5} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
 
       {current ? (

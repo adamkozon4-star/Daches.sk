@@ -9,7 +9,9 @@ import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import { IndexKapitol, Kapitoly } from "@/components/sluzby/Kapitoly";
 import { areaServed, company } from "@/lib/content";
+import KartaRealizacie from "@/components/realizacie/KartaRealizacie";
 import { clankyKSluzbe } from "@/lib/radca";
+import { realizacieKSluzbe } from "@/lib/realizacie";
 import { najdiSluzbu, sluzby } from "@/lib/sluzby";
 
 type Props = { params: Promise<{ sluzba: string }> };
@@ -52,6 +54,9 @@ export default async function Page({ params }: Props) {
 
   /** Články radcu, ktoré na túto službu odkazujú — odkaz ide aj naspäť. */
   const zRadcu = clankyKSluzbe(s.slug);
+
+  /** Realizácie s obcou k tejto službe — najviac tri, aby sekcia nebola galéria. */
+  const realizacieSluzby = realizacieKSluzbe(s.slug).slice(0, 3);
 
   /**
    * Rozsah prác pre `OfferCatalog` sa berie z kapitol — je to blok typu
@@ -132,6 +137,46 @@ export default async function Page({ params }: Props) {
       <IndexKapitol kapitoly={s.kapitoly} />
 
       <Kapitoly kapitoly={s.kapitoly} />
+
+      {/* ---------- Realizácie ---------- */}
+      {/*
+        Zákazky s obcou, ktoré k službe patria. Pre návštevníka dôkaz, že
+        to firma robí, pre Google prepojenie služby s konkrétnymi obcami.
+      */}
+      {realizacieSluzby.length ? (
+        <section aria-labelledby="realizacie-sluzby" className="section-y bg-light">
+          <div className="container-max">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              <SectionHeading
+                id="realizacie-sluzby"
+                eyebrow="Realizácie"
+                before="Takto to vyzerá "
+                mark="u nás na Orave"
+              />
+              <Link
+                href="/realizacie"
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-dark"
+              >
+                Všetky realizácie
+                <ArrowRight
+                  size={16}
+                  strokeWidth={2.5}
+                  aria-hidden="true"
+                  className="transition-transform duration-[var(--d-short)] group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+
+            <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
+              {realizacieSluzby.map((r, i) => (
+                <Reveal as="li" key={r.slug} index={i}>
+                  <KartaRealizacie r={r} />
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </section>
+      ) : null}
 
       {/* ---------- Cena ---------- */}
       <section aria-labelledby="cena" className="section-y bg-dark">
