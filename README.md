@@ -226,8 +226,9 @@ a nesprávny údaj je horší než žiadny.
 - [ ] **Texty k realizáciám od klienta** — 2 – 3 vety ku každej zákazke (stav
       pred, čo sa menilo, prečo) do `odseky` v `lib/realizacie/index.ts`.
       Bez nich sú stránky len fotky s popisom krokov.
-- [ ] **Premenné prostredia vo Verceli** — `RESEND_API_KEY`, `DOPYT_ODOSIELATEL`,
-      `DOPYT_PRIJEMCA`. Názvy sú v `.env.example`.
+- [x] **Premenné prostredia vo Verceli** — `RESEND_API_KEY`, `DOPYT_ODOSIELATEL`,
+      `DOPYT_PRIJEMCA`, `DOPYT_KOPIA` (skrytá kópia správcovi webu). Názvy sú
+      v `.env.example`. Doručenie overené testom 18. 11. 2026.
 
 ## Čo zostáva dorobiť
 
